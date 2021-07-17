@@ -107,10 +107,6 @@ class _LoginState extends State<Login> {
               height: 3,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: Center(
-                  child: Text("Daftar akun baru",
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500, color: Colors.white))),
             ),
           ],
         ),
