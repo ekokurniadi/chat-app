@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/constanta.dart';
+import 'package:komun_apps/components/uploadImage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/config.dart';
 
 class DetailKomunitas extends StatefulWidget {
@@ -15,6 +18,7 @@ class DetailKomunitas extends StatefulWidget {
 }
 
 class _DetailKomunitasState extends State<DetailKomunitas> {
+  final Helper helper = Helper();
   bool prosesGetById = false;
   String namaKomunitas = "";
   String tentang = "";
@@ -24,7 +28,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
   String cover = "";
   String contact = "";
   String post = "";
-  String idUser ="";
+  String idUser = "";
+  String admin = "";
   _getHeader() async {
     final response = await http
         .post(Config.BASE_URL + "getById", body: {"id": widget.index});
@@ -40,6 +45,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
         tentang = res['values']['tentang'];
         contact = res['values']['contact'];
         post = res['values']['post'];
+        admin = res['values']['admin'];
       });
     }
     return "Success";
@@ -58,11 +64,92 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     return "Success";
   }
 
+  delete(id,foto) async{
+    final response = await http.post(Config.BASE_URL + "deleteAlbumById",body:{
+      "id":id,
+      "foto":foto
+    });
+    final res = jsonDecode(response.body);
+    if(res['status']==200){
+      helper.alertLog(res['message']);
+      _getDetailAlbum();
+      _getHeader();
+    }
+  }
+
+  void showImages(networkImage, id) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.zero,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Foto',
+                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      delete(id,networkImage);
+                    })
+              ],
+            ),
+            content: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.height * 0.50,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(Config.BASE_URL_IMAGE + "$networkImage"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  _getCurrentUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user = sharedPreferences.get('idUser');
+    print("usernya: $user");
+    setState(() {
+      idUser = user;
+    });
+  }
+
+  String text = "";
+  void updateInformation(String information) {
+    setState(() => text = information);
+    setState(() {
+      text = information;
+    });
+    _getDetailAlbum();
+    _getHeader();
+  }
+
+  void toUpload() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => UploadImage(text: "album", id: widget.index)),
+    );
+    updateInformation(information);
+  }
+
   @override
   void initState() {
     super.initState();
     _getHeader();
     _getDetailAlbum();
+    _getCurrentUser();
   }
 
   @override
@@ -72,10 +159,18 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
-          "Detail Komunitas",
+          "$namaKomunitas",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
+      floatingActionButton: idUser == admin
+          ? FloatingActionButton(
+              onPressed: () {
+                toUpload();
+              },
+              child: Icon(Icons.add_a_photo),
+            )
+          : Container(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -85,16 +180,16 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.25,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      child: Image.network(
+                      backgroundImage: NetworkImage(
                         Config.BASE_URL_IMAGE + "$cover",
-                        fit: BoxFit.fill,
+                        
                       ),
+                     
                     ),
                     Container(
                       margin: EdgeInsets.only(left: 30),
@@ -106,24 +201,32 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.pink
-                                ),
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.pink),
                                 padding: EdgeInsets.all(5),
                                 child: Text("$post Post",
-                                    style: GoogleFonts.poppins(color:Colors.white)),
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white)),
                               ),
                               Container(
                                 padding: EdgeInsets.all(5),
                                 child: Text("$pengikut Pengikut",
                                     style: GoogleFonts.poppins()),
                               ),
+                              idUser == admin
+                                  ? IconButton(
+                                      icon: Icon(Icons.more_horiz),
+                                      onPressed: () {
+                                        print("more");
+                                      })
+                                  : Container()
                             ],
                           ),
                           Container(
                             padding: EdgeInsets.only(left: 5),
                             child: Text("$namaKomunitas",
-                                style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500)),
                           ),
                           Container(
                             padding: EdgeInsets.all(5),
@@ -162,23 +265,31 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                 : Container(
                     height: MediaQuery.of(context).size.height * 0.80,
                     child: GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4),
+                            crossAxisCount: 3),
                         itemCount: album.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            color: Colors.blue,
-                            padding: EdgeInsets.all(3),
-                            margin: EdgeInsets.all(1),
-                            child: Center(
+                          return GestureDetector(
+                            onTap: () {
+                              showImages("${album[index]['foto']}",
+                                  album[index]['id']);
+                            },
+                            child: Container(
+                              color: Colors.blueGrey,
+                              padding: EdgeInsets.all(2),
+                              margin: EdgeInsets.all(0.5),
                               child: Image.network(
                                 Config.BASE_URL_IMAGE + album[index]['foto'],
-                                fit: BoxFit.contain,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           );
                         }),
-                  )
+                  ),
+            Container(
+              height: 100,
+            )
           ],
         ),
       ),

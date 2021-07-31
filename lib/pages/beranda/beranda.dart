@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/config.dart';
+import 'package:komun_apps/pages/komunitas/detailKomunitas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tabbar/tabbar.dart';
 import '../../components/Helper.dart';
@@ -45,7 +46,7 @@ class _BerandaState extends State<Beranda> {
     return "Success";
   }
 
-  follow(int index) async {
+  follow(index) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var idUser = pref.getString("idUser");
     final response = await http.post(Config.BASE_URL + "follow",
@@ -62,7 +63,7 @@ class _BerandaState extends State<Beranda> {
     }
   }
 
-  unfollow(int index) async {
+  unfollow(index) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var idUser = pref.getString("idUser");
     final response = await http.post(Config.BASE_URL + "unfollow",
@@ -226,96 +227,109 @@ class _BerandaState extends State<Beranda> {
                         child: ListView.builder(
                           itemCount: dataBeranda.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.all(8),
-                              margin: EdgeInsets.only(
-                                  right: 10, left: 10, bottom: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.8),
-                                    spreadRadius: 2,
-                                    blurRadius: 3,
-                                    offset: Offset(
-                                        0, 3), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    child: Image.asset("images/user-login.png"),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.75,
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBeranda[index]['namaKomunitas']}",
-                                          style: GoogleFonts.poppins(),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.75,
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBeranda[index]['tentang']}",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12.0),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBeranda[index]['pengikut']} pengikut",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12.0),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: idUser ==
-                                                dataBeranda[index]['idAdmin']
-                                            ? false
-                                            : true,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            follow(dataBeranda[index]['id']);
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.all(5),
-                                            padding: EdgeInsets.only(
-                                                top: 3,
-                                                bottom: 3,
-                                                left: 8,
-                                                right: 8),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                color: Colors.blue),
-                                            child: Text(
-                                              "Ikuti",
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.white),
-                                            ),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailKomunitas(
+                                            index: dataBeranda[index]['id'])));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                margin: EdgeInsets.only(
+                                    right: 10, left: 10, bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.8),
+                                      spreadRadius: 2,
+                                      blurRadius: 3,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      child:
+                                          Image.asset("images/user-login.png"),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.75,
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBeranda[index]['namaKomunitas']}",
+                                            style: GoogleFonts.poppins(),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.75,
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBeranda[index]['tentang']}",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12.0),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBeranda[index]['pengikut']} pengikut",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12.0),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: idUser ==
+                                                  dataBeranda[index]['idAdmin']
+                                              ? false
+                                              : true,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              follow(dataBeranda[index]['id']);
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.all(5),
+                                              padding: EdgeInsets.only(
+                                                  top: 3,
+                                                  bottom: 3,
+                                                  left: 8,
+                                                  right: 8),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: Colors.blue),
+                                              child: Text(
+                                                "Ikuti",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -416,96 +430,110 @@ class _BerandaState extends State<Beranda> {
                         child: ListView.builder(
                           itemCount: dataBerandaFollow.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.all(8),
-                              margin: EdgeInsets.only(
-                                  right: 10, left: 10, bottom: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.8),
-                                    spreadRadius: 2,
-                                    blurRadius: 3,
-                                    offset: Offset(
-                                        0, 3), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    child: Image.asset("images/user-login.png"),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.75,
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBerandaFollow[index]['namaKomunitas']}",
-                                          style: GoogleFonts.poppins(),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.75,
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBerandaFollow[index]['tentang']}",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12.0),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 3),
-                                        child: Text(
-                                          "${dataBerandaFollow[index]['pengikut']} pengikut",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12.0),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: idUser ==
-                                                dataBerandaFollow[index]
-                                                    ['idAdmin']
-                                            ? false
-                                            : true,
-                                        child: GestureDetector(
-                                          onTap: () => unfollow(
-                                              dataBerandaFollow[index]['id']),
-                                          child: Container(
-                                            margin: EdgeInsets.all(5),
-                                            padding: EdgeInsets.only(
-                                                top: 3,
-                                                bottom: 3,
-                                                left: 8,
-                                                right: 8),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                color: Colors.red),
-                                            child: Text(
-                                              "Berhenti mengikuti",
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.white),
-                                            ),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailKomunitas(
+                                            index: dataBerandaFollow[index]
+                                                ['id'])));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                margin: EdgeInsets.only(
+                                    right: 10, left: 10, bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.8),
+                                      spreadRadius: 2,
+                                      blurRadius: 3,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      child:
+                                          Image.asset("images/user-login.png"),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.75,
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBerandaFollow[index]['namaKomunitas']}",
+                                            style: GoogleFonts.poppins(),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.75,
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBerandaFollow[index]['tentang']}",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12.0),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 3),
+                                          child: Text(
+                                            "${dataBerandaFollow[index]['pengikut']} pengikut",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12.0),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: idUser ==
+                                                  dataBerandaFollow[index]
+                                                      ['idAdmin']
+                                              ? false
+                                              : true,
+                                          child: GestureDetector(
+                                            onTap: () => unfollow(
+                                                dataBerandaFollow[index]['id']),
+                                            child: Container(
+                                              margin: EdgeInsets.all(5),
+                                              padding: EdgeInsets.only(
+                                                  top: 3,
+                                                  bottom: 3,
+                                                  left: 8,
+                                                  right: 8),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: Colors.red),
+                                              child: Text(
+                                                "Berhenti mengikuti",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },

@@ -156,7 +156,7 @@ class _LoginState extends State<Login> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ForgotPassword()));
+                      context, MaterialPageRoute( fullscreenDialog: true,builder: (context) => ForgotPassword()));
                 },
                 child: Container(
                   margin: EdgeInsets.only(top: 5),
@@ -190,7 +190,7 @@ class _LoginState extends State<Login> {
               GestureDetector(
                 onTap: (){
                    Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Register()));
+                      context, MaterialPageRoute( fullscreenDialog: true,builder: (context) => Register()));
                 },
                               child: Container(
                   margin: EdgeInsets.only(top: 18),

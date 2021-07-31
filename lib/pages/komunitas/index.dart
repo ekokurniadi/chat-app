@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/constanta.dart';
+import 'package:komun_apps/pages/komunitas/buatKomunitas.dart';
 import 'package:komun_apps/pages/komunitas/detailKomunitas.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../components/Helper.dart';
 import '../../components/config.dart';
 
 class Index extends StatefulWidget {
@@ -32,6 +31,24 @@ class _IndexState extends State<Index> {
     return "Success";
   }
 
+  String text = "";
+  void updateInformation(String information) {
+    setState(() => text = information);
+    setState(() {
+      text = information;
+    });
+    _getMoreData("");
+  }
+
+  void toCreate() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true, builder: (context) => BuatKomunitas()),
+    );
+    updateInformation(information);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +67,9 @@ class _IndexState extends State<Index> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: () {
+         toCreate();
+        },
         child: Icon(Icons.add),
       ),
       body: SingleChildScrollView(

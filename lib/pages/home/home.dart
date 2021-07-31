@@ -2,9 +2,13 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/pages/bantuan/bantuan.dart';
 import 'package:komun_apps/pages/beranda/beranda.dart';
+import 'package:komun_apps/pages/chat/chat.dart';
 import 'package:komun_apps/pages/komunitas/index.dart';
 import 'package:komun_apps/pages/login.dart';
+import 'package:komun_apps/pages/notif/notif.dart';
+import 'package:komun_apps/pages/profile/profile.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
@@ -67,28 +71,11 @@ class _HomeState extends State<Home> {
         title: Text("Komun", style: GoogleFonts.poppins()),
         actions: [
           IconButton(
-              icon: Stack(
-                children: [
-                  Icon(
-                    CupertinoIcons.mail_solid,
-                    color: Colors.white,
-                  ),
-                  Positioned(
-                    // draw a red marble
-                    top: 0.0,
-                    right: 0.0,
-                    child: Visibility(
-                      visible: jumlahNotif == 0 ? false : true,
-                      child: new Icon(Icons.brightness_1,
-                          size: 12.0,
-                          color: jumlahNotif != 0
-                              ? Colors.red
-                              : Colors.transparent),
-                    ),
-                  )
-                ],
+              icon: Icon(
+                CupertinoIcons.padlock_solid,
+                color: Colors.white,
               ),
-              onPressed: ()=> logOut())
+              onPressed: () => logOut())
         ],
       ),
       drawer: Drawer(
@@ -116,8 +103,8 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text("Buat Komunitas"),
               onTap: () {
-                 Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Index()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Index()));
               },
             ),
             ListTile(
@@ -130,7 +117,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(top: 18.0),
+        padding: const EdgeInsets.only(top: 80.0),
         child: BottomNavyBar(
           showElevation: true,
           itemCornerRadius: 24,
@@ -144,6 +131,32 @@ class _HomeState extends State<Home> {
             BottomNavyBarItem(
                 icon: Icon(CupertinoIcons.home),
                 title: Text('Beranda',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                activeColor: Color(0xFF306bdd),
+                inactiveColor: Color(0xFF70747F),
+                textAlign: TextAlign.start),
+            BottomNavyBarItem(
+                icon: Stack(
+                  children: [
+                    Icon(
+                      CupertinoIcons.mail_solid,
+                    ),
+                    Positioned(
+                      // draw a red marble
+                      top: 0.0,
+                      right: 0.0,
+                      child: Visibility(
+                        visible: jumlahNotif == 0 ? false : true,
+                        child: new Icon(Icons.brightness_1,
+                            size: 12.0,
+                            color: jumlahNotif != 0
+                                ? Colors.red
+                                : Colors.transparent),
+                      ),
+                    )
+                  ],
+                ),
+                title: Text('Chat',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                 activeColor: Color(0xFF306bdd),
                 inactiveColor: Color(0xFF70747F),
@@ -206,7 +219,13 @@ class _HomeState extends State<Home> {
                     bottomNavBarIndex = index;
                   });
                 },
-                children: [Beranda()],
+                children: [
+                  Beranda(),
+                  Chat(),
+                  Bantuan(),
+                  NotificationPage(),
+                  Profile()
+                ],
               )
             ],
           ),

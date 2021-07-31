@@ -345,7 +345,9 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => startUpload(),
+                  onTap: () => base64Image == ""
+                      ? helper.alertLog("Silahkan upload foto terlebih dahulu")
+                      : startUpload(),
                   child: Container(
                     margin: EdgeInsets.only(top: 14),
                     width: MediaQuery.of(context).size.width * 0.80,
@@ -362,8 +364,11 @@ class _RegisterState extends State<Register> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Login()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) => Login()));
                   },
                   child: Container(
                     margin: EdgeInsets.only(top: 2),
