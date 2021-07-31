@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komun_apps/pages/login.dart';
+import 'package:komun_apps/pages/splashscreen.dart';
 // import 'package:komun_apps/pages/splashscreen.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }

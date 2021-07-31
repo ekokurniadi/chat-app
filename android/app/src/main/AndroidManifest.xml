@@ -15,7 +15,7 @@
           <uses-feature android:name="android.hardware.location.gps" android:required="false"  />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="komun_apps"
+        android:label="Komun"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

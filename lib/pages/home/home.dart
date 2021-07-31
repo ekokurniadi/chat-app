@@ -3,6 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/pages/beranda/beranda.dart';
+import 'package:komun_apps/pages/komunitas/index.dart';
+import 'package:komun_apps/pages/login.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../components/Helper.dart';
 
 class Home extends StatefulWidget {
   // const Home({ Key? key }) : super(key: key);
@@ -16,18 +21,39 @@ class _HomeState extends State<Home> {
   int ntf;
   int bottomNavBarIndex;
   PageController pageController;
-
+  final Helper helper = Helper();
+  bool prosesLogout = false;
   @override
   void initState() {
     super.initState();
     bottomNavBarIndex = 0;
     jumlahNotif = 0;
     pageController = PageController(initialPage: bottomNavBarIndex);
+    prosesLogout = false;
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  logOut() async {
+    setState(() {
+      prosesLogout = true;
+    });
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.remove("idUser");
+      preferences.remove("nama");
+      preferences.remove("username");
+      preferences.remove("level");
+    });
+    setState(() {
+      prosesLogout = false;
+    });
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));
+    helper.alertLog("Anda Telah Log Out !");
   }
 
   @override
@@ -62,7 +88,7 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
-              onPressed: null)
+              onPressed: ()=> logOut())
         ],
       ),
       drawer: Drawer(
@@ -73,21 +99,31 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 color: Color(0xFF0c53a0),
               ),
-              child: Column(children: [
-                CircleAvatar(child: Image.asset("images/user-login.png"),),
-                Container(child: Text("Komun Apps",style: GoogleFonts.poppins(color: Colors.white),),)
-              ],),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    child: Image.asset("images/user-login.png"),
+                  ),
+                  Container(
+                    child: Text(
+                      "Komun Apps",
+                      style: GoogleFonts.poppins(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
             ),
             ListTile(
               title: Text("Buat Komunitas"),
               onTap: () {
-                print("buat komunitas");
+                 Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Index()));
               },
             ),
             ListTile(
               title: Text("Daftar Sebagai Keamanan"),
               onTap: () {
-                  print("daftar sebagai keamanan");
+                print("daftar sebagai keamanan");
               },
             )
           ],
@@ -153,22 +189,27 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: Align(
-        alignment: AlignmentDirectional.bottomCenter,
-        child: Stack(
-          children: [
-            PageView(
-              controller: pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  bottomNavBarIndex = index;
-                });
-              },
-              children: [
-                Beranda()
-              ],
-            )
-          ],
+      body: ModalProgressHUD(
+        inAsyncCall: prosesLogout,
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Color(0xFF0c53a0)),
+        ),
+        child: Align(
+          alignment: AlignmentDirectional.bottomCenter,
+          child: Stack(
+            children: [
+              PageView(
+                controller: pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    bottomNavBarIndex = index;
+                  });
+                },
+                children: [Beranda()],
+              )
+            ],
+          ),
         ),
       ),
     );

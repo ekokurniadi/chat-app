@@ -79,11 +79,25 @@ class _BerandaState extends State<Beranda> {
     }
   }
 
+  String idUser = "";
+  String job = "";
+
+  _getCurrentUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user = sharedPreferences.get('idUser');
+    var userJob = sharedPreferences.get('job');
+    setState(() {
+      idUser = user;
+      job = userJob;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _getMoreData("");
     _getMoreDataFollow("");
+    _getCurrentUser();
   }
 
   @override
@@ -271,26 +285,31 @@ class _BerandaState extends State<Beranda> {
                                               fontSize: 12.0),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () {
+                                      Visibility(
+                                        visible: idUser ==
+                                                dataBeranda[index]['idAdmin']
+                                            ? false
+                                            : true,
+                                        child: GestureDetector(
+                                          onTap: () {
                                             follow(dataBeranda[index]['id']);
-
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.all(5),
-                                          padding: EdgeInsets.only(
-                                              top: 3,
-                                              bottom: 3,
-                                              left: 8,
-                                              right: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: Colors.blue),
-                                          child: Text(
-                                            "Ikuti",
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.white),
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.all(5),
+                                            padding: EdgeInsets.only(
+                                                top: 3,
+                                                bottom: 3,
+                                                left: 8,
+                                                right: 8),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                color: Colors.blue),
+                                            child: Text(
+                                              "Ikuti",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                         ),
                                       )
@@ -456,23 +475,31 @@ class _BerandaState extends State<Beranda> {
                                               fontSize: 12.0),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () => unfollow(dataBerandaFollow[index]['id']),
-                                        child: Container(
-                                          margin: EdgeInsets.all(5),
-                                          padding: EdgeInsets.only(
-                                              top: 3,
-                                              bottom: 3,
-                                              left: 8,
-                                              right: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: Colors.red),
-                                          child: Text(
-                                            "Berhenti mengikuti",
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.white),
+                                      Visibility(
+                                        visible: idUser ==
+                                                dataBerandaFollow[index]
+                                                    ['idAdmin']
+                                            ? false
+                                            : true,
+                                        child: GestureDetector(
+                                          onTap: () => unfollow(
+                                              dataBerandaFollow[index]['id']),
+                                          child: Container(
+                                            margin: EdgeInsets.all(5),
+                                            padding: EdgeInsets.only(
+                                                top: 3,
+                                                bottom: 3,
+                                                left: 8,
+                                                right: 8),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                color: Colors.red),
+                                            child: Text(
+                                              "Berhenti mengikuti",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                         ),
                                       )
