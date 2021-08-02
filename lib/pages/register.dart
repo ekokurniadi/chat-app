@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
         prosesLogin = false;
       });
       helper.alertLog(res['message']);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
     } else {
       setState(() {
         prosesLogin = false;

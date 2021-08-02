@@ -6,11 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/constanta.dart';
 import 'package:komun_apps/components/uploadImage.dart';
+import 'package:komun_apps/pages/komunitas/editKomunitas.dart';
+import 'package:komun_apps/pages/user/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/config.dart';
 
 class DetailKomunitas extends StatefulWidget {
-  String index;
+  final String index;
 
   DetailKomunitas({this.index});
   @override
@@ -64,13 +66,11 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     return "Success";
   }
 
-  delete(id,foto) async{
-    final response = await http.post(Config.BASE_URL + "deleteAlbumById",body:{
-      "id":id,
-      "foto":foto
-    });
+  delete(id, foto) async {
+    final response = await http.post(Config.BASE_URL + "deleteAlbumById",
+        body: {"id": id, "foto": foto});
     final res = jsonDecode(response.body);
-    if(res['status']==200){
+    if (res['status'] == 200) {
       helper.alertLog(res['message']);
       _getDetailAlbum();
       _getHeader();
@@ -97,7 +97,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                       color: Colors.red,
                     ),
                     onPressed: () {
-                      delete(id,networkImage);
+                      delete(id, networkImage);
                     })
               ],
             ),
@@ -140,6 +140,16 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
       MaterialPageRoute(
           fullscreenDialog: true,
           builder: (context) => UploadImage(text: "album", id: widget.index)),
+    );
+    updateInformation(information);
+  }
+
+  void toEdit() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => EditKomunitas(id: widget.index)),
     );
     updateInformation(information);
   }
@@ -187,9 +197,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                     CircleAvatar(
                       backgroundImage: NetworkImage(
                         Config.BASE_URL_IMAGE + "$cover",
-                        
                       ),
-                     
                     ),
                     Container(
                       margin: EdgeInsets.only(left: 30),
@@ -208,16 +216,31 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                                     style: GoogleFonts.poppins(
                                         color: Colors.white)),
                               ),
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                child: Text("$pengikut Pengikut",
-                                    style: GoogleFonts.poppins()),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) => User(
+                                            id: widget.index)),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: primaryColor,
+                                  ),
+                                  padding: EdgeInsets.all(5),
+                                  child: Text("$pengikut Pengikut",
+                                      style: GoogleFonts.poppins(color:Colors.white)),
+                                ),
                               ),
                               idUser == admin
                                   ? IconButton(
                                       icon: Icon(Icons.more_horiz),
                                       onPressed: () {
-                                        print("more");
+                                        toEdit();
                                       })
                                   : Container()
                             ],

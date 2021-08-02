@@ -6,8 +6,6 @@ import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/config.dart';
 import 'package:komun_apps/components/constanta.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:komun_apps/pages/login.dart';
 import 'package:komun_apps/pages/register.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -42,8 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         prosesLogin = false;
       });
       helper.alertLog(message);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login()));
+      Navigator.pop(context);
     } else {
       setState(() {
         prosesLogin = false;

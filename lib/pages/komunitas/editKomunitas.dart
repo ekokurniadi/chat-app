@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:komun_apps/components/uploadImageDemo.dart';
 import '../../components/Helper.dart';
 import '../../components/config.dart';
 import '../../components/constanta.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'dart:async';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'dart:convert';
 
-class BuatKomunitas extends StatefulWidget {
+class EditKomunitas extends StatefulWidget {
+  final String id;
+  EditKomunitas({this.id});
   @override
-  _BuatKomunitasState createState() => _BuatKomunitasState();
+  _EditKomunitasState createState() => _EditKomunitasState();
 }
 
-class _BuatKomunitasState extends State<BuatKomunitas> {
+class _EditKomunitasState extends State<EditKomunitas> {
   bool prosesLogin = false;
-  Future<File> file;
-  String base64Image;
-  File tmpFile;
-  String errMessage = 'Error Uploading Image';
-  Image imageUs;
-  String status = "";
+  String imageUser;
   final TextEditingController _nama = new TextEditingController();
   final TextEditingController _tentang = new TextEditingController();
   final TextEditingController _kegiatan = new TextEditingController();
@@ -31,67 +25,37 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
   final TextEditingController _lokasi = new TextEditingController();
   final TextEditingController _contact = new TextEditingController();
 
-
-  final Helper helper = Helper();
-  chooseImages() {
-    setState(() {
-      // ignore: deprecated_member_use
-      file = ImagePicker.pickImage(source: ImageSource.camera);
-    });
-
-    setStatus('');
-  }
-
-  setStatus(String message) {
-    setState(() {
-      status = message;
-    });
-  }
-
-  chooseImage() {
-    setState(() {
-      // ignore: deprecated_member_use
-      file = ImagePicker.pickImage(source: ImageSource.gallery);
-    });
-    setStatus('');
-  }
-
-  String idUser = "";
-  String job = "";
-
-  _getCurrentUser() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var user = sharedPreferences.get('idUser');
-    print("usernya: $user");
-    setState(() {
-      idUser = user;
-    });
-  }
-
-  startUpload() {
-    setStatus('Uploading Image...');
-    if (null == tmpFile) {
-      setStatus(errMessage);
-      return;
+  _getHeader() async {
+    final response = await http
+        .post(Config.BASE_URL + "getByIdEdit", body: {"id": widget.id});
+    final res = jsonDecode(response.body);
+    if (res['status'] == 200) {
+      setState(() {
+        _nama.text = res['values']['nama_komunitas'];
+        _info.text = res['values']['info'];
+        _kegiatan.text = res['values']['kegiatan'];
+        _lokasi.text = res['values']['lokasi'];
+        _tentang.text = res['values']['tentang'];
+        _contact.text = res['values']['contact'];
+        imageUser = res['values']['cover'];
+      });
     }
-    String fileName = tmpFile.path.split('/').last;
-    save(fileName);
+    return "Success";
   }
+  final Helper helper = Helper();
 
-  save(String filename) async {
+  save() async {
     setState(() {
       prosesLogin = true;
     });
-    final response = await http.post(Config.BASE_URL + "buatKomunitas", body: {
+    final response = await http.post(Config.BASE_URL + "editKomunitas", body: {
+      "id":widget.id,
       "nama": _nama.text,
       "tentang": _tentang.text,
       "kegiatan": _kegiatan.text,
       "info": _info.text,
       "lokasi": _lokasi.text,
       "contact": _contact.text,
-      "admin": idUser,
-      "image": base64Image,
-      "name": filename,
     });
     final res = jsonDecode(response.body);
     if (res['status'] == "200") {
@@ -108,133 +72,31 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
     }
   }
 
-  showImage() {
-    return FutureBuilder<File>(
-      future: file,
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            null != snapshot.data) {
-          tmpFile = snapshot.data;
-          base64Image = base64Encode(snapshot.data.readAsBytesSync());
-          return Image.file(
-            snapshot.data,
-            fit: BoxFit.fill,
-            width: 100,
-            height: 110,
-          );
-        } else if (null != snapshot.error) {
-          return Image.asset(
-            "images/add-photo.png",
-            width: 100,
-            height: 110,
-            fit: BoxFit.fill,
-          );
-        } else {
-          return Image.asset(
-            "images/add-photo.png",
-            width: 100,
-            height: 110,
-            fit: BoxFit.fill,
-          );
-        }
-      },
-    );
-  }
 
   @override
   void initState() {
     super.initState();
     prosesLogin = false;
-    _getCurrentUser();
+    _getHeader();
   }
 
-  void modalUpload() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: Text(
-              "Upload Foto Profile Anda",
-              style: GoogleFonts.poppins(fontSize: 15.0),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.cancel),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-            content: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.10,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      chooseImage();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      height: 50,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: primaryColor),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.picture_in_picture,
-                                color: Colors.blueGrey),
-                            Text(
-                              "Galeri",
-                              style: GoogleFonts.poppins(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      chooseImages();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 100,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: primaryColor),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.camera_front, color: Colors.blueGrey),
-                            Text(
-                              "Kamera",
-                              style: GoogleFonts.poppins(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
+  String text = "";
+  void updateInformation(String information) {
+    setState(() => text = information);
+    setState(() {
+      text = information;
+    });
+    _getHeader();
+  }
+
+  void toUpload() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => UploadImageDemo(text: "0", id: widget.id)),
+    );
+    updateInformation(information);
   }
 
   @override
@@ -244,7 +106,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
-          "BuatKomunitas",
+          "EditKomunitas",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
@@ -259,6 +121,65 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.20,
+                decoration: BoxDecoration(
+                  color: Color(0xFF306bdd),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(50),
+                    bottomLeft: Radius.circular(50),
+                  ),
+                ),
+                child: Center(
+                  child: imageUser == null
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),
+                              color: Colors.white,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                toUpload();
+                              },
+                              child: Image.asset(
+                              "images/empty.jpg",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 90,
+                            height: 90,
+                            child: GestureDetector(
+                              onTap: () {
+                                 toUpload();
+                              },
+                              child: imageUser == null
+                                  ? Image.asset(
+                                      "images/empty.jpg",
+                                      fit: BoxFit.cover,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 0,
+                                      backgroundImage: NetworkImage(
+                                        Config.BASE_URL_IMAGE +
+                                            "$imageUser",
+                                        scale: 10,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                ),
+              ),
                 Container(
                   margin: EdgeInsets.only(top: 14, left: 24, right: 24),
                   decoration: BoxDecoration(
@@ -411,44 +332,8 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                     ),
                   ),
                 ),
-                // Container(
-                //   margin: EdgeInsets.only(top: 14, left: 24, right: 24),
-                //   decoration: BoxDecoration(
-                //       color: Colors.white,
-                //       border: Border.all(color: primaryColor),
-                //       borderRadius: BorderRadius.circular(10)),
-                //   child: Center(
-                //     child: TextField(
-                //       style: GoogleFonts.poppins(color: primaryColor),
-                //       controller: _admin,
-                //       decoration: InputDecoration(
-                //           border: InputBorder.none,
-                //           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                //           hintText: "Admin Komunitas",
-                //           hintStyle: GoogleFonts.poppins(color: primaryColor),
-                //           prefixIcon: Icon(
-                //             Icons.people_outline,
-                //             size: 23,
-                //             color: primaryColor,
-                //           )),
-                //     ),
-                //   ),
-                // ),
                 GestureDetector(
-                  onTap: () {
-                    modalUpload();
-                  },
-                  child: Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                    margin: EdgeInsets.only(top: 5),
-                    child: Center(child: showImage()),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => base64Image == ""
-                      ? helper.alertLog("Silahkan upload foto terlebih dahulu")
-                      : startUpload(),
+                  onTap: () =>save(),
                   child: Container(
                     margin: EdgeInsets.only(top: 14),
                     width: MediaQuery.of(context).size.width * 0.80,

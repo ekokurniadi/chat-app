@@ -4,20 +4,20 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../components/config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class UploadImage extends StatefulWidget {
+
+class UploadImageDemo extends StatefulWidget {
   final String text;
   final String id;
-  UploadImage({Key key, @required this.text,this.id}) : super(key: key);
+  UploadImageDemo({Key key, @required this.text,this.id}) : super(key: key);
 
   final String title = "Upload Image Demo";
 
   @override
-  UploadImageState createState() => UploadImageState();
+  UploadImageDemoState createState() => UploadImageDemoState();
 }
 
-class UploadImageState extends State<UploadImage> {
+class UploadImageDemoState extends State<UploadImageDemo> {
   Future<File> file;
   String status = '';
   String idUser = '';
@@ -58,8 +58,6 @@ class UploadImageState extends State<UploadImage> {
   }
 
   upload(String fileName) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var idUser = pref.getString("idUser");
     String linkToServer = "";
     if (widget.text == "0") {
       linkToServer = "updateFotoProfileKomunitas";
@@ -71,7 +69,7 @@ class UploadImageState extends State<UploadImage> {
     http.post(Config.BASE_URL + linkToServer, body: {
       "image": base64Image,
       "name": fileName,
-      "id": widget.text == "album" ? widget.id : idUser
+      "id": widget.id
     }).then((result) {
       final data = jsonDecode(result.body);
       setStatus(result.statusCode == 200 ? data['pesan'] : errMessage);
