@@ -23,9 +23,9 @@ class _CreateChatState extends State<CreateChat> {
   ScrollController _scrollController = new ScrollController();
   int page = 20;
   bool isLoading = false;
-  String idRoom="";
-  String namaPenerima="";
-  String idPenerima="";
+  String idRoom = "";
+  String namaPenerima = "";
+  String idPenerima = "";
 
   List<dynamic> dataUser;
   _getMoreData(int index, String filter) async {
@@ -40,7 +40,7 @@ class _CreateChatState extends State<CreateChat> {
         "length": index.toString(),
         "draw": "1",
         "searching": "$filter",
-        "id":user
+        "id": user
       });
       // final response = jsonDecode(url.body);
       Map<String, dynamic> response = jsonDecode(url.body);
@@ -55,7 +55,7 @@ class _CreateChatState extends State<CreateChat> {
   }
 
   createMessage(String recepientId, String recepientName) async {
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user = sharedPreferences.get('idUser');
     var userName = sharedPreferences.get('nama');
     print("sender:$user");
@@ -65,30 +65,35 @@ class _CreateChatState extends State<CreateChat> {
     setState(() {
       prosesLoading = true;
     });
-    final response =
-        await http.post(Config.BASE_URL + "createMessage", body: {
-          "sender":user,
-          "senderName":userName,
-          "recipient":recepientId,
-          "recipientName":recepientName
-        });
-        final res =jsonDecode(response.body);
-        if(res['status']=="200"){
-          setState(() {
-            prosesLoading=false;
-            idRoom = res['idRoom'];
-            namaPenerima=res['recepient'];
-            idPenerima=res['recepientId'];
-          });
-           Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ChatDetail(id:idRoom,name: namaPenerima,tujuan: idPenerima,)));
-        }
+    final response = await http.post(Config.BASE_URL + "createMessage", body: {
+      "sender": user,
+      "senderName": userName,
+      "recipient": recepientId,
+      "recipientName": recepientName
+    });
+    final res = jsonDecode(response.body);
+    if (res['status'] == "200") {
+      setState(() {
+        prosesLoading = false;
+        idRoom = res['idRoom'];
+        namaPenerima = res['recepient'];
+        idPenerima = res['recepientId'];
+      });
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatDetail(
+                    id: idRoom,
+                    name: namaPenerima,
+                    tujuan: idPenerima,
+                  )));
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    prosesLoading=false;
+    prosesLoading = false;
     controllerSearchValue = false;
     _getMoreData(page, filter);
     _scrollController.addListener(() {
@@ -170,10 +175,12 @@ class _CreateChatState extends State<CreateChat> {
                         if (value == "") {
                           setState(() {
                             controllerSearchValue = false;
+                            _getMoreData(page, filter);
                           });
                         } else {
                           setState(() {
                             controllerSearchValue = true;
+                            _getMoreData(page, filter);
                           });
                         }
                       },

@@ -12,6 +12,7 @@ import 'package:komun_apps/pages/profile/profile.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Home extends StatefulWidget {
   // const Home({ Key? key }) : super(key: key);
@@ -27,6 +28,68 @@ class _HomeState extends State<Home> {
   PageController pageController;
   final Helper helper = Helper();
   bool prosesLogout = false;
+  FirebaseMessaging fm = FirebaseMessaging();
+  _HomeState() {
+    fm.configure(
+      onLaunch: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        }
+      },
+      onResume: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        }
+      },
+      onMessage: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();

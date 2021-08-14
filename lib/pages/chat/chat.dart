@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/components/config.dart';
-import 'package:komun_apps/components/constanta.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/pages/chat/chatdetail.dart';
 import 'package:komun_apps/pages/chat/create_chat.dart';
@@ -92,7 +91,7 @@ class _ChatState extends State<Chat> {
           child: Icon(Icons.message),
         ),
       ),
-       backgroundColor: Color(0xFFf4f4f4),
+      backgroundColor: Color(0xFFf4f4f4),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -132,10 +131,12 @@ class _ChatState extends State<Chat> {
                     if (value == "") {
                       setState(() {
                         controllerSearchValue = false;
+                        _getMoreData(page, filter);
                       });
                     } else {
                       setState(() {
                         controllerSearchValue = true;
+                        _getMoreData(page, filter);
                       });
                     }
                   },
@@ -171,18 +172,20 @@ class _ChatState extends State<Chat> {
                         itemCount: dataUser.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white70
-                            ),
-                            margin: EdgeInsets.only(bottom: 5,left:3,right:3),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white70),
+                            margin:
+                                EdgeInsets.only(bottom: 5, left: 3, right: 3),
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundImage: dataUser[index]['fotoTujuan'] == null ? Image.asset("images/add-photo.png") : NetworkImage(
-                                  Config.BASE_URL_IMAGE +
-                                      "${dataUser[index]['fotoTujuan']}",
-                                ),
+                                backgroundImage:
+                                    dataUser[index]['fotoTujuan'] == null
+                                        ? Image.asset("images/add-photo.png")
+                                        : NetworkImage(
+                                            Config.BASE_URL_IMAGE +
+                                                "${dataUser[index]['fotoTujuan']}",
+                                          ),
                               ),
                               title: Row(
                                 mainAxisAlignment:
@@ -194,7 +197,12 @@ class _ChatState extends State<Chat> {
                                       style: GoogleFonts.poppins(),
                                     ),
                                   ),
-                                  Container(child: Text("${dataUser[index]['time']}",style: GoogleFonts.poppins(fontSize:12),),)
+                                  Container(
+                                    child: Text(
+                                      "${dataUser[index]['time']}",
+                                      style: GoogleFonts.poppins(fontSize: 12),
+                                    ),
+                                  )
                                 ],
                               ),
                               onTap: () {

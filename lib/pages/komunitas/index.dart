@@ -111,10 +111,12 @@ class _IndexState extends State<Index> {
                     if (value == "") {
                       setState(() {
                         controllerSearchValue = false;
+                        _getMoreData(filter);
                       });
                     } else {
                       setState(() {
                         controllerSearchValue = true;
+                        _getMoreData(filter);
                       });
                     }
                   },

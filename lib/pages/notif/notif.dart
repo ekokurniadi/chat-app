@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:komun_apps/pages/notif/createBroadcastMessageCommunity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/config.dart';
 import '../../components/Helper.dart';
@@ -16,6 +17,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   List<dynamic> dataList;
   final Helper helper = Helper();
+  String levelUser = "";
   Future<String> getNotif() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var idUser = pref.getString("idUser");
@@ -29,11 +31,20 @@ class _NotificationPageState extends State<NotificationPage> {
     return "Success";
   }
 
+  _getCurrent() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var level = pref.getString("level");
+    setState(() {
+      levelUser = level;
+    });
+  }
+
   Timer timeNotif;
   @override
   void initState() {
     super.initState();
     getNotif();
+    _getCurrent();
     timeNotif = Timer.periodic(Duration(seconds: 2), (Timer tim) => getNotif());
   }
 
@@ -56,9 +67,25 @@ class _NotificationPageState extends State<NotificationPage> {
     timeNotif?.cancel();
   }
 
+  createBroadcastMessage(){
+     Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CreateBroadcastMessageCommunity()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: levelUser == "user"
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  createBroadcastMessage();
+                },
+                child: Icon(Icons.message),
+              ),
+            )
+          : Container(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -69,7 +96,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                             "images/empty.jpg",
+                            "images/empty.jpg",
                             fit: BoxFit.contain,
                             width: 250,
                           ),

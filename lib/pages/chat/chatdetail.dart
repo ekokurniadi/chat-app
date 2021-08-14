@@ -49,7 +49,7 @@ class _ChatDetailState extends State<ChatDetail> {
         page++;
       });
 
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+     
     }
   }
 
@@ -68,12 +68,14 @@ class _ChatDetailState extends State<ChatDetail> {
       "sender": users,
       "recipient": widget.tujuan
     });
+   
     setState(() {
       sendController.clear();
     });
     final res = jsonDecode(response.body);
     if (res['status'] == "200") {
       _getMoreData(page);
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
@@ -88,11 +90,13 @@ class _ChatDetailState extends State<ChatDetail> {
           _scrollController.position.maxScrollExtent) {
         _getMoreData(page);
       }
+      
+    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
     timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
       _getMoreData(page);
     });
-    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    
   }
 
   @override
@@ -173,7 +177,7 @@ class _ChatDetailState extends State<ChatDetail> {
                                           children: [
                                             Container(
                                               child: Text(
-                                                  "${dataUser[index]['message']}"),
+                                                  "${dataUser[index]['message']}",style: GoogleFonts.ptSans(fontSize:18),),
                                               width: 200,
                                               padding: EdgeInsets.fromLTRB(
                                                   15.0, 10.0, 15.0, 10.0),
@@ -193,7 +197,7 @@ class _ChatDetailState extends State<ChatDetail> {
                                           children: [
                                             Container(
                                               child: Text(
-                                                  "${dataUser[index]['message']}"),
+                                                  "${dataUser[index]['message']}",style: GoogleFonts.ptSans(fontSize:18),),
                                               width: 200,
                                               padding: EdgeInsets.fromLTRB(
                                                   15.0, 10.0, 15.0, 10.0),

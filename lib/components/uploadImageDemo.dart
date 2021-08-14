@@ -65,7 +65,9 @@ class UploadImageDemoState extends State<UploadImageDemo> {
       linkToServer = "uploadAlbum";
     } else if (widget.text == "albumUser") {
       linkToServer = "uploadAlbum";
-    } 
+    } else {
+       linkToServer = "updateFotoProfile";
+    }
     http.post(Config.BASE_URL + linkToServer, body: {
       "image": base64Image,
       "name": fileName,
