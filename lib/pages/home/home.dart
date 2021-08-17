@@ -2,8 +2,9 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:komun_apps/pages/bantuan/bantuan.dart';
+import 'package:komun_apps/pages/bantuan/daftarKeamanan.dart';
 import 'package:komun_apps/pages/beranda/beranda.dart';
+import 'package:komun_apps/pages/beranda/cariBantuan.dart';
 import 'package:komun_apps/pages/chat/chat.dart';
 import 'package:komun_apps/pages/komunitas/index.dart';
 import 'package:komun_apps/pages/login.dart';
@@ -173,7 +174,8 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text("Daftar Sebagai Keamanan"),
               onTap: () {
-                print("daftar sebagai keamanan");
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => DaftarKeamanan()));
               },
             )
           ],
@@ -285,11 +287,12 @@ class _HomeState extends State<Home> {
                 children: [
                   Beranda(),
                   Chat(),
-                  Bantuan(),
+                CariBantuan(),
                   NotificationPage(),
                   Profile()
                 ],
-              )
+              ),
+			  
             ],
           ),
         ),

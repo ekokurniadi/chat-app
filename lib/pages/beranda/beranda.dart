@@ -139,6 +139,13 @@ class _BerandaState extends State<Beranda> {
           SingleChildScrollView(
             child: Column(
               children: [
+                // Container(
+                //   margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+                //   height: 50,
+                //   width: MediaQuery.of(context).size.width,
+                //   color: Colors.red,
+                //   child: Center(child: Text("iklan disini")),
+                // ),
                 Container(
                   margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
                   width: MediaQuery.of(context).size.width,
@@ -334,7 +341,7 @@ class _BerandaState extends State<Beranda> {
                             );
                           },
                         ),
-                      )
+                      ),
               ],
             ),
           ),

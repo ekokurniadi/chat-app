@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/components/constanta.dart';
 import 'package:komun_apps/components/uploadImageDemo.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,14 +11,16 @@ import 'package:http/http.dart' as http;
 import '../../components/Helper.dart';
 import '../../components/config.dart';
 
-class Profile extends StatefulWidget {
+class ProfileUser extends StatefulWidget {
+  final String id;
+  ProfileUser({this.id});
   @override
-  _ProfileState createState() => _ProfileState();
+  _ProfileUserState createState() => _ProfileUserState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileUserState extends State<ProfileUser> {
   bool loading = false;
-  bool _obsecureText = true;
+
   String imageUser = "";
   bool terima = true;
   String status = "0";
@@ -30,7 +33,7 @@ class _ProfileState extends State<Profile> {
   final Helper helper = new Helper();
   FirebaseMessaging fm = FirebaseMessaging();
 
-  _ProfileState() {
+  _ProfileUserState() {
     fm.configure(
       onLaunch: (Map<String, dynamic> msg) async {
         // print("ketika sedang berjalan");
@@ -71,31 +74,14 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     loading = true;
-    getIdUser();
     _getCurrentUser();
-    _getDetailAlbum();
+	_getDetailAlbum();
   }
 
-  void _showPassword() {
-    setState(() {
-      _obsecureText = !_obsecureText;
-    });
-  }
-
-  getIdUser() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var userId = pref.getString("idUser");
-    setState(() {
-      user = userId;
-    });
-  }
 
   _getCurrentUser() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var userId = pref.getString("idUser");
-    _getDetailAlbum();
     final response = await http
-        .post(Config.BASE_URL + "getCurrentUser", body: {"id": userId});
+        .post(Config.BASE_URL + "getCurrentUser", body: {"id": widget.id});
     final res = jsonDecode(response.body);
     print(res);
     if (res['status'] == 200) {
@@ -146,43 +132,34 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  _saveProfile() async {
+  String text = "";
+  void updateInformation(String information) {
+    setState(() => text = information);
     setState(() {
-      loading = true;
+      text = information;
     });
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var userId = pref.getString("idUser");
-    final response =
-        await http.post(Config.BASE_URL + "updateProfileUser", body: {
-      "id": userId,
-      "nama": _nama.text.toString(),
-      "alamat": _alamat.text.toString(),
-      "password": _password.text.toString(),
-    });
-    final res = jsonDecode(response.body);
-    if (res["status"] == 200) {
-      setState(() {
-        loading = false;
-        helper.alertSuccess(res['message'], context);
-        _getCurrentUser();
-      });
-    } else {
-      loading = false;
-      helper.alertError(res['message'], context);
-      _getCurrentUser();
-    }
+    _getCurrentUser();
+  }
+
+  void toUpload() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => UploadImageDemo(text: "1", id: user)),
+    );
+    updateInformation(information);
   }
 
   List<dynamic> album;
   _getDetailAlbum() async {
     final response =
-        await http.post(Config.BASE_URL + "getAlbumUser", body: {"id": user});
+        await http.post(Config.BASE_URL + "getAlbumUser", body: {"id": widget.id});
     Map<String, dynamic> res = jsonDecode(response.body);
     print(res);
     setState(() {
       album = res['values'];
     });
-    print(album);
+    // print(album);
     return "Success";
   }
 
@@ -211,27 +188,17 @@ class _ProfileState extends State<Profile> {
         });
   }
 
-  String text = "";
-  void updateInformation(String information) {
-    setState(() => text = information);
-    setState(() {
-      text = information;
-    });
-    _getCurrentUser();
-  }
-
-  void toUpload() async {
-    final information = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => UploadImageDemo(text: "1", id: user)),
-    );
-    updateInformation(information);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+		 appBar: AppBar(
+        backgroundColor: primaryColor,
+        elevation: 0,
+        title: Text(
+          "Profile User",
+          style: GoogleFonts.poppins(color: Colors.white),
+        ),
+      ),
       backgroundColor: Color(0xFFf4f4f4),
       body: ModalProgressHUD(
         inAsyncCall: loading,
@@ -263,14 +230,9 @@ class _ProfileState extends State<Profile> {
                               borderRadius: BorderRadius.circular(50.0),
                               color: Colors.white,
                             ),
-                            child: GestureDetector(
-                              onTap: () {
-                                toUpload();
-                              },
-                              child: Image.asset(
-                                "images/user-default.png",
-                                fit: BoxFit.cover,
-                              ),
+                            child: Image.asset(
+                              "images/user-default.png",
+                              fit: BoxFit.cover,
                             ),
                           ),
                         )
@@ -279,23 +241,18 @@ class _ProfileState extends State<Profile> {
                           child: Container(
                             width: 90,
                             height: 90,
-                            child: GestureDetector(
-                              onTap: () {
-                                toUpload();
-                              },
-                              child: imageUser == null
-                                  ? Image.asset(
-                                      "images/user-default.png",
-                                      fit: BoxFit.cover,
-                                    )
-                                  : CircleAvatar(
-                                      radius: 0,
-                                      backgroundImage: NetworkImage(
-                                        Config.BASE_URL_IMAGE + "$imageUser",
-                                        scale: 10,
-                                      ),
+                            child: imageUser == null
+                                ? Image.asset(
+                                    "images/user-default.png",
+                                    fit: BoxFit.cover,
+                                  )
+                                : CircleAvatar(
+                                    radius: 0,
+                                    backgroundImage: NetworkImage(
+                                      Config.BASE_URL_IMAGE + "$imageUser",
+                                      scale: 10,
                                     ),
-                            ),
+                                  ),
                           ),
                         ),
                 ),
@@ -311,6 +268,7 @@ class _ProfileState extends State<Profile> {
                         title: Container(
                           width: MediaQuery.of(context).size.width,
                           child: TextField(
+                            readOnly: true,
                             controller: _nama,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
@@ -347,6 +305,7 @@ class _ProfileState extends State<Profile> {
                         title: Container(
                           width: MediaQuery.of(context).size.width,
                           child: TextField(
+                            readOnly: true,
                             controller: _alamat,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
@@ -355,43 +314,6 @@ class _ProfileState extends State<Profile> {
                                 color: Color(0xFF70747F),
                               ),
                               hintText: "Alamat",
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 0.0, bottom: 0.0, top: 0.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: TextField(
-                            controller: _level,
-                            readOnly: true,
-                            style: GoogleFonts.poppins(),
-                            decoration: InputDecoration(
-                              labelText: "Level Pengguna",
-                              labelStyle: TextStyle(
-                                color: Color(0xFF70747F),
-                              ),
-                              hintText: "Level Pengguna",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -447,113 +369,6 @@ class _ProfileState extends State<Profile> {
                                 borderSide: BorderSide(
                                   width: 2,
                                   color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: TextField(
-                            controller: _password,
-                            obscureText: _obsecureText,
-                            style: GoogleFonts.poppins(),
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  _showPassword();
-                                },
-                                icon: _obsecureText == true
-                                    ? Icon(
-                                        Icons.visibility,
-                                        color: Color(0xFF70747F),
-                                      )
-                                    : Icon(Icons.visibility_off,
-                                        color: Color(0xFF70747F)),
-                              ),
-                              labelText: "Password",
-                              labelStyle: TextStyle(
-                                color: Color(0xFF70747F),
-                              ),
-                              hintText: "Password",
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 0.0, bottom: 0.0, top: 0.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: Color(0xFFC9CFDF),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Active",
-                                  style: GoogleFonts.poppins(),
-                                ),
-                                Switch(
-                                  value: terima,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      terima = value;
-                                    });
-                                    updateState(value);
-                                  },
-                                  activeTrackColor: Colors.lightBlueAccent,
-                                  activeColor: Colors.blue,
-                                ),
-                              ],
-                            )),
-                      ),
-                      ListTile(
-                        title: GestureDetector(
-                          onTap: () {
-                            _saveProfile();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(50),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.8),
-                                  spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            padding: EdgeInsets.all(8.0),
-                            margin:
-                                EdgeInsets.only(left: 15, top: 5, right: 15),
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: Text(
-                                "Simpan",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),

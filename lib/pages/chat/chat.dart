@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/pages/chat/chatdetail.dart';
 import 'package:komun_apps/pages/chat/create_chat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Chat extends StatefulWidget {
   @override
@@ -23,6 +25,45 @@ class _ChatState extends State<Chat> {
   ScrollController _scrollController = new ScrollController();
   int page = 20;
   bool isLoading = false;
+  final Helper helper = Helper();
+  FirebaseMessaging fm = FirebaseMessaging();
+
+  _ChatState() {
+    fm.configure(
+      onLaunch: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+      onResume: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+      onMessage: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+    );
+  }
 
   List<dynamic> dataUser;
   _getMoreData(int index, String filter) async {

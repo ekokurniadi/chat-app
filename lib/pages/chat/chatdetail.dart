@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:komun_apps/pages/profile/profileUser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
 import '../../components/config.dart';
 import '../../components/constanta.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ChatDetail extends StatefulWidget {
   final String id;
@@ -27,6 +29,45 @@ class _ChatDetailState extends State<ChatDetail> {
   String users = "";
   TextEditingController sendController = TextEditingController();
   final Helper helper = Helper();
+  FirebaseMessaging fm = FirebaseMessaging();
+
+  _ChatDetailState() {
+    fm.configure(
+      onLaunch: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+      onResume: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+      onMessage: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+        }
+      },
+    );
+  }
+
   List<dynamic> dataUser;
   _getMoreData(int index) async {
     if (!isLoading) {
@@ -48,8 +89,6 @@ class _ChatDetailState extends State<ChatDetail> {
         isLoading = false;
         page++;
       });
-
-     
     }
   }
 
@@ -68,7 +107,7 @@ class _ChatDetailState extends State<ChatDetail> {
       "sender": users,
       "recipient": widget.tujuan
     });
-   
+
     setState(() {
       sendController.clear();
     });
@@ -90,13 +129,12 @@ class _ChatDetailState extends State<ChatDetail> {
           _scrollController.position.maxScrollExtent) {
         _getMoreData(page);
       }
-      
-    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+
+      // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
     timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
       _getMoreData(page);
     });
-    
   }
 
   @override
@@ -133,6 +171,16 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
+  viewUser(String id) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => ProfileUser(
+                  id: id,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,6 +191,28 @@ class _ChatDetailState extends State<ChatDetail> {
           "Chatting with ${widget.name}",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
+        actions: [
+          PopupMenuButton(
+              onSelected: (value) {
+                if (value == 0) {
+                  viewUser(widget.tujuan);
+                }
+              },
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 0,
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.people, color: Colors.black),
+                          SizedBox(width: 8.0),
+                          Text("Profile",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 14.0, color: Color(0xFF70747F))),
+                        ],
+                      ),
+                    ),
+                  ])
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -177,7 +247,10 @@ class _ChatDetailState extends State<ChatDetail> {
                                           children: [
                                             Container(
                                               child: Text(
-                                                  "${dataUser[index]['message']}",style: GoogleFonts.ptSans(fontSize:18),),
+                                                "${dataUser[index]['message']}",
+                                                style: GoogleFonts.ptSans(
+                                                    fontSize: 18),
+                                              ),
                                               width: 200,
                                               padding: EdgeInsets.fromLTRB(
                                                   15.0, 10.0, 15.0, 10.0),
@@ -187,7 +260,9 @@ class _ChatDetailState extends State<ChatDetail> {
                                                       BorderRadius.circular(
                                                           8.0)),
                                               margin: EdgeInsets.only(
-                                                  bottom: 10.0, right: 10,top:10),
+                                                  bottom: 10.0,
+                                                  right: 10,
+                                                  top: 10),
                                             )
                                           ],
                                         )
@@ -197,7 +272,10 @@ class _ChatDetailState extends State<ChatDetail> {
                                           children: [
                                             Container(
                                               child: Text(
-                                                  "${dataUser[index]['message']}",style: GoogleFonts.ptSans(fontSize:18),),
+                                                "${dataUser[index]['message']}",
+                                                style: GoogleFonts.ptSans(
+                                                    fontSize: 18),
+                                              ),
                                               width: 200,
                                               padding: EdgeInsets.fromLTRB(
                                                   15.0, 10.0, 15.0, 10.0),
@@ -207,7 +285,10 @@ class _ChatDetailState extends State<ChatDetail> {
                                                       BorderRadius.circular(
                                                           8.0)),
                                               margin: EdgeInsets.only(
-                                                  bottom: 10.0, right: 10,top:10,left: 10),
+                                                  bottom: 10.0,
+                                                  right: 10,
+                                                  top: 10,
+                                                  left: 10),
                                             )
                                           ],
                                         );

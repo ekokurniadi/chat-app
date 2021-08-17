@@ -54,11 +54,15 @@ class _CreateBroadcastMessageCommunityState
     }
   }
 
-  test() async {
+  send() async {
     final response = await http.post(Config.BASE_URL + "broadcastMessage",
         body: {"arrayId": selected.toString(), "pesan": _pesan.text});
     final res = jsonDecode(response.body);
-    print(res);
+    if(res['status']=="200"){
+		helper.alertLog("Berhasil mengirimkan pesan");
+	}else{
+		helper.alertLog("Terjadi kesalahan");
+	}
   }
 
   @override
@@ -268,7 +272,7 @@ class _CreateBroadcastMessageCommunityState
               GestureDetector(
                 onTap: () => _pesan.text.length <= 0 || selected.length == 0
                     ? helper.alertLog("Nothing to send")
-                    : test(),
+                    : send(),
                 child: Container(
                   margin: EdgeInsets.only(top: 5),
                   width: MediaQuery.of(context).size.width * 0.80,

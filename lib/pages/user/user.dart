@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/constanta.dart';
+import 'package:komun_apps/pages/profile/profileUser.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../../components/config.dart';
 
@@ -187,7 +188,8 @@ class _UserState extends State<User> {
                                     ),
                                   ),
                                   title: Row(
-                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
                                         child: Text(
@@ -195,14 +197,36 @@ class _UserState extends State<User> {
                                           style: GoogleFonts.poppins(),
                                         ),
                                       ),
-                                      IconButton(
-                                          icon: Icon(CupertinoIcons.mail_solid,color: Colors.blueGrey,),
-                                          onPressed: (){})
+                                      Row(
+                                        children: [
+                                          IconButton(
+											  tooltip:"Profile",
+                                              icon: Icon(
+                                                CupertinoIcons.person,
+                                                color: Colors.blueGrey,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        fullscreenDialog: true,
+                                                        builder: (context) =>
+                                                            ProfileUser(
+                                                              id: dataUser[
+                                                                  index][1],
+                                                            )));
+                                              }),
+                                          IconButton(
+											  tooltip: "Chat",
+                                              icon: Icon(
+                                                Icons.message,
+                                                color: Colors.blueGrey,
+                                              ),
+                                              onPressed: () {})
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                  onTap: (){
-                                    print("Hello");
-                                  },
                                 );
                               }
                             }),
