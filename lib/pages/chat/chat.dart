@@ -253,7 +253,8 @@ class _ChatState extends State<Chat> {
                                       builder: (context) => ChatDetail(
                                           id: dataUser[index]['idRoom'],
                                           name: dataUser[index]['namaTujuan'],
-                                          tujuan: dataUser[index]['idTo'])),
+                                          tujuan: dataUser[index]['idTo'],
+                                          call: dataUser[index]['telp'])),
                                 );
                               },
                             ),

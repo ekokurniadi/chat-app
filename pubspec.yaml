@@ -40,6 +40,7 @@ dependencies:
   bottom_navy_bar: ^5.6.0
   tabbar: ^0.1.1
   slider_button: ^1.0.0
+  url_launcher: ^5.4.1
   
 
 dev_dependencies:

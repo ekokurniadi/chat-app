@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/components/uploadImage.dart';
 import 'package:komun_apps/components/uploadImageDemo.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -173,6 +174,25 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void updateInformation2(String information) {
+    setState(() => text = information);
+    setState(() {
+      text = information;
+    });
+	helper.alertLog("Foto berhasil di unggah");
+    _getDetailAlbum();
+  }
+
+  void toUpload2() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => UploadImage(text: "albumUser", id: user)),
+    );
+    updateInformation2(information);
+  }
+
   List<dynamic> album;
   _getDetailAlbum() async {
     final response =
@@ -182,7 +202,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       album = res['values'];
     });
-    print(album);
+    // print(album);
     return "Success";
   }
 
@@ -607,6 +627,17 @@ class _ProfileState extends State<Profile> {
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom:50.0),
+        child: FloatingActionButton(
+		  isExtended: true,
+		 
+          onPressed: () {
+            toUpload2();
+          },
+          child: Icon(Icons.add_a_photo),
         ),
       ),
     );

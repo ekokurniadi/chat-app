@@ -11,12 +11,14 @@ import '../../components/Helper.dart';
 import '../../components/config.dart';
 import '../../components/constanta.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatDetail extends StatefulWidget {
   final String id;
   final String name;
   final String tujuan;
-  ChatDetail({this.id, this.name, this.tujuan});
+  final String call;
+  ChatDetail({this.id, this.name, this.tujuan,this.call});
 
   @override
   _ChatDetailState createState() => _ChatDetailState();
@@ -192,6 +194,11 @@ class _ChatDetailState extends State<ChatDetail> {
           style: GoogleFonts.poppins(color: Colors.white),
         ),
         actions: [
+          IconButton(
+              icon: Icon(Icons.call),
+              onPressed: () {
+                launch("tel://${widget.call}");
+              }),
           PopupMenuButton(
               onSelected: (value) {
                 if (value == 0) {

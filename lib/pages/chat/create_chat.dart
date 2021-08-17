@@ -26,6 +26,7 @@ class _CreateChatState extends State<CreateChat> {
   String idRoom = "";
   String namaPenerima = "";
   String idPenerima = "";
+  String telp = "";
 
   List<dynamic> dataUser;
   _getMoreData(int index, String filter) async {
@@ -54,7 +55,7 @@ class _CreateChatState extends State<CreateChat> {
     }
   }
 
-  createMessage(String recepientId, String recepientName) async {
+  createMessage(String recepientId, String recepientName, String call) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user = sharedPreferences.get('idUser');
     var userName = sharedPreferences.get('nama');
@@ -86,6 +87,7 @@ class _CreateChatState extends State<CreateChat> {
                     id: idRoom,
                     name: namaPenerima,
                     tujuan: idPenerima,
+                    call: call,
                   )));
     }
   }
@@ -247,8 +249,8 @@ class _CreateChatState extends State<CreateChat> {
                                     ],
                                   ),
                                   onTap: () {
-                                    createMessage(
-                                        dataUser[index][1], dataUser[index][2]);
+                                    createMessage(dataUser[index][1],
+                                        dataUser[index][2], dataUser[index][4]);
                                   },
                                 );
                               }
