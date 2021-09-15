@@ -37,8 +37,10 @@ class _ChatState extends State<Chat> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         }
       },
       onResume: (Map<String, dynamic> msg) async {
@@ -48,8 +50,10 @@ class _ChatState extends State<Chat> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         }
       },
       onMessage: (Map<String, dynamic> msg) async {
@@ -58,11 +62,21 @@ class _ChatState extends State<Chat> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page, filter);
         }
       },
     );
+  }
+  String user = "";
+  getIdUser() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var userId = pref.getString("idUser");
+    setState(() {
+      user = userId;
+    });
   }
 
   List<dynamic> dataUser;
@@ -82,7 +96,7 @@ class _ChatState extends State<Chat> {
       });
       // final response = jsonDecode(url.body);
       Map<String, dynamic> response = jsonDecode(url.body);
-
+      print(response);
       setState(() {
         dataUser = response["data"];
         isLoading = false;
@@ -97,6 +111,7 @@ class _ChatState extends State<Chat> {
     super.initState();
     controllerSearchValue = false;
     _getMoreData(page, filter);
+    getIdUser();
     // _scrollController.addListener(() {
     //   if (_scrollController.position.pixels ==
     //       _scrollController.position.maxScrollExtent) {
@@ -220,8 +235,14 @@ class _ChatState extends State<Chat> {
                                 EdgeInsets.only(bottom: 5, left: 3, right: 3),
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundImage:
-                                    dataUser[index]['fotoTujuan'] == null
+                                backgroundImage: user == dataUser[index]['idTo']
+                                    ? dataUser[index]['fotoPengirim'] == null
+                                        ? Image.asset("images/add-photo.png")
+                                        : NetworkImage(
+                                            Config.BASE_URL_IMAGE +
+                                                "${dataUser[index]['fotoPengirim']}",
+                                          )
+                                    : dataUser[index]['fotoTujuan'] == null
                                         ? Image.asset("images/add-photo.png")
                                         : NetworkImage(
                                             Config.BASE_URL_IMAGE +
@@ -234,7 +255,9 @@ class _ChatState extends State<Chat> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      "${dataUser[index]['namaTujuan']}",
+                                      user == dataUser[index]['idTo']
+                                          ? "${dataUser[index]['namaPengirim']}"
+                                          : "${dataUser[index]['namaTujuan']}",
                                       style: GoogleFonts.poppins(),
                                     ),
                                   ),
@@ -252,8 +275,12 @@ class _ChatState extends State<Chat> {
                                   MaterialPageRoute(
                                       builder: (context) => ChatDetail(
                                           id: dataUser[index]['idRoom'],
-                                          name: dataUser[index]['namaTujuan'],
+                                          name: user ==
+                                                  "${dataUser[index]['idTo']}"
+                                              ? "${dataUser[index]['namaPengirim']}"
+                                              : "${dataUser[index]['namaTujuan']}",
                                           tujuan: dataUser[index]['idTo'],
+										  dari:dataUser[index]['idFrom'],
                                           call: dataUser[index]['telp'])),
                                 );
                               },

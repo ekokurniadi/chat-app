@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/components/function.dart';
 import 'package:komun_apps/pages/bantuan/daftarKeamanan.dart';
 import 'package:komun_apps/pages/beranda/beranda.dart';
 import 'package:komun_apps/pages/beranda/cariBantuan.dart';
@@ -90,7 +93,8 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
+  Timer timer;
+  final Functional functional = Functional();
   @override
   void initState() {
     super.initState();
@@ -98,11 +102,15 @@ class _HomeState extends State<Home> {
     jumlahNotif = 0;
     pageController = PageController(initialPage: bottomNavBarIndex);
     prosesLogout = false;
+    timer = Timer.periodic(Duration(seconds: 2), (Timer timer) {
+      functional.sendLocation();
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+	timer?.cancel();
   }
 
   logOut() async {
@@ -174,8 +182,8 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text("Daftar Sebagai Keamanan"),
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => DaftarKeamanan()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => DaftarKeamanan()));
               },
             )
           ],
@@ -287,12 +295,11 @@ class _HomeState extends State<Home> {
                 children: [
                   Beranda(),
                   Chat(),
-                CariBantuan(),
+                  CariBantuan(),
                   NotificationPage(),
                   Profile()
                 ],
               ),
-			  
             ],
           ),
         ),

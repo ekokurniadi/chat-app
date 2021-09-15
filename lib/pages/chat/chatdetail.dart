@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:komun_apps/components/uploadImageMessage.dart';
 import 'package:komun_apps/pages/profile/profileUser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
@@ -12,13 +13,16 @@ import '../../components/config.dart';
 import '../../components/constanta.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:android_intent/android_intent.dart';
+import 'dart:ui';
 
 class ChatDetail extends StatefulWidget {
   final String id;
   final String name;
   final String tujuan;
+  final String dari;
   final String call;
-  ChatDetail({this.id, this.name, this.tujuan,this.call});
+  ChatDetail({this.id, this.name, this.tujuan, this.call, this.dari});
 
   @override
   _ChatDetailState createState() => _ChatDetailState();
@@ -42,8 +46,10 @@ class _ChatDetailState extends State<ChatDetail> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         }
       },
       onResume: (Map<String, dynamic> msg) async {
@@ -53,8 +59,10 @@ class _ChatDetailState extends State<ChatDetail> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         }
       },
       onMessage: (Map<String, dynamic> msg) async {
@@ -63,8 +71,10 @@ class _ChatDetailState extends State<ChatDetail> {
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
+          _getMoreData(page);
         }
       },
     );
@@ -103,11 +113,12 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   _sendMessage() async {
+    print(widget.tujuan);
     final response = await http.post(Config.BASE_URL + "sendMessage", body: {
       "id_chat": widget.id,
       "message": sendController.text,
       "sender": users,
-      "recipient": widget.tujuan
+      "recipient": widget.tujuan != users ? widget.tujuan : widget.dari
     });
 
     setState(() {
@@ -118,6 +129,15 @@ class _ChatDetailState extends State<ChatDetail> {
       _getMoreData(page);
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
+  }
+
+  
+  void _launchTurnByTurnNavigationInGoogleMaps(String tujuan) {
+    final AndroidIntent intent = AndroidIntent(
+        action: 'action_view',
+        data: Uri.encodeFull('http://maps.google.com/maps?daddr=$tujuan'),
+        package: 'com.google.android.apps.maps');
+    intent.launch();
   }
 
   Timer timer;
@@ -134,7 +154,7 @@ class _ChatDetailState extends State<ChatDetail> {
 
       // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
-    timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
       _getMoreData(page);
     });
   }
@@ -183,6 +203,29 @@ class _ChatDetailState extends State<ChatDetail> {
                 )));
   }
 
+  String text = "";
+  void updateInformation(String information) {
+    setState(() => text = information);
+    setState(() {
+      text = information;
+    });
+    _getMoreData(page);
+	  _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  void toUpload() async {
+    final information = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => UploadImageMessage(
+              link: "SendMessageImage",
+              id: widget.id,
+              recepient: widget.tujuan != users ? widget.tujuan : widget.dari)),
+    );
+    updateInformation(information);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,6 +246,8 @@ class _ChatDetailState extends State<ChatDetail> {
               onSelected: (value) {
                 if (value == 0) {
                   viewUser(widget.tujuan);
+                } else {
+                  viewUser(widget.tujuan);
                 }
               },
               itemBuilder: (context) => [
@@ -213,6 +258,18 @@ class _ChatDetailState extends State<ChatDetail> {
                           Icon(Icons.people, color: Colors.black),
                           SizedBox(width: 8.0),
                           Text("Profile",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 14.0, color: Color(0xFF70747F))),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 0,
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.pin_drop, color: Colors.black),
+                          SizedBox(width: 8.0),
+                          Text("Lokasi",
                               style: GoogleFonts.poppins(
                                   fontSize: 14.0, color: Color(0xFF70747F))),
                         ],
@@ -252,51 +309,110 @@ class _ChatDetailState extends State<ChatDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            Container(
-                                              child: Text(
-                                                "${dataUser[index]['message']}",
-                                                style: GoogleFonts.ptSans(
-                                                    fontSize: 18),
-                                              ),
-                                              width: 200,
-                                              padding: EdgeInsets.fromLTRB(
-                                                  15.0, 10.0, 15.0, 10.0),
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFFaadaff),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0)),
-                                              margin: EdgeInsets.only(
-                                                  bottom: 10.0,
-                                                  right: 10,
-                                                  top: 10),
-                                            )
+                                            dataUser[index]['type'] == "0"
+                                                ? Container(
+                                                    child: Text(
+                                                      "${dataUser[index]['message']}",
+                                                      style: GoogleFonts.ptSans(
+                                                          fontSize: 18),
+                                                    ),
+                                                    width: 200,
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            15.0,
+                                                            10.0,
+                                                            15.0,
+                                                            10.0),
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFaadaff),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0)),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10.0,
+                                                        right: 10,
+                                                        top: 10),
+                                                  )
+                                                : Container(
+                                                    child: dataUser[index]
+                                                                ['message'] ==
+                                                            null
+                                                        ? CircularProgressIndicator()
+                                                        : Image.network(
+                                                            Config.BASE_URL_IMAGE +
+                                                                dataUser[index]
+                                                                    ['message'],
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFaadaff),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0)),
+                                                    width: 200,
+                                                    
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10.0,
+                                                        right: 10,
+                                                        top: 10),
+                                                  )
                                           ],
                                         )
                                       : Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              child: Text(
-                                                "${dataUser[index]['message']}",
-                                                style: GoogleFonts.ptSans(
-                                                    fontSize: 18),
-                                              ),
-                                              width: 200,
-                                              padding: EdgeInsets.fromLTRB(
-                                                  15.0, 10.0, 15.0, 10.0),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0)),
-                                              margin: EdgeInsets.only(
-                                                  bottom: 10.0,
-                                                  right: 10,
-                                                  top: 10,
-                                                  left: 10),
-                                            )
+                                            dataUser[index]['type'] == "0"
+                                                ? Container(
+                                                    child: Text(
+                                                      "${dataUser[index]['message']}",
+                                                      style: GoogleFonts.ptSans(
+                                                          fontSize: 18),
+                                                    ),
+                                                    width: 200,
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            15.0,
+                                                            10.0,
+                                                            15.0,
+                                                            10.0),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0)),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10.0,
+                                                        right: 10,
+                                                        top: 10,
+                                                        left: 10),
+                                                  )
+                                                : Container(
+                                                    child: dataUser[index]
+                                                                ['message'] ==
+                                                            null
+                                                        ? CircularProgressIndicator()
+                                                        : Image.network(
+                                                            Config.BASE_URL_IMAGE +
+                                                                dataUser[index]
+                                                                    ['message'],
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFaadaff),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0)),
+                                                    width: 200,
+                                                    
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10.0,
+                                                        right: 10,
+                                                        top: 10),
+                                                  )
                                           ],
                                         );
                                 }
@@ -319,6 +435,16 @@ class _ChatDetailState extends State<ChatDetail> {
                       ],
                     ),
                     child: new ListTile(
+                      leading: new IconButton(
+                        iconSize: 25,
+                        icon: new Icon(
+                          Icons.add_photo_alternate,
+                          color: Colors.blueGrey,
+                        ),
+                        onPressed: () {
+                          toUpload();
+                        },
+                      ),
                       title: TextField(
                         maxLines: null,
                         keyboardType: TextInputType.multiline,

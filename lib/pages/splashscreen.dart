@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0c53a0),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -57,9 +57,15 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  color: Colors.white),
+                  color: Color(0xFF0c53a0)),
               child: Center(
-                  child: Text("K",style: GoogleFonts.bubblerOne(fontSize: 75.0,color: Color(0xFF0c53a0),fontWeight: FontWeight.bold),)),
+                  child: Text(
+                "K",
+                style: GoogleFonts.bubblerOne(
+                    fontSize: 100.0,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold),
+              )),
             ),
             Container(
               child: Text(
