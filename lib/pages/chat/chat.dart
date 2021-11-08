@@ -119,7 +119,7 @@ class _ChatState extends State<Chat> {
     //   }
     // });
     timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
-      _getMoreData(page, filter);
+    //   _getMoreData(page, filter);
     });
   }
 

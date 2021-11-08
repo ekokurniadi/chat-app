@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/config.dart';
@@ -14,7 +12,7 @@ final Helper helper = Helper();
 class Functional {
   void sendLocation() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    var userId = pref.getString("id");
+    var userId = pref.getString("idUser");
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     final coordinates = new Coordinates(position.latitude, position.longitude);
@@ -32,9 +30,10 @@ class Functional {
       "afc": alamat.addressLine.toString(),
     });
     final res = jsonDecode(response.body);
+	// print(position.latitude.toString());
     // print(res);
     if (res['status'] == 200) {
-      print("Lokasi Petugas saat ini : $position");
+    //   print("Lokasi Petugas saat ini : $position");
     } else {
       print("Gagal mendapatkan lokasi");
     }

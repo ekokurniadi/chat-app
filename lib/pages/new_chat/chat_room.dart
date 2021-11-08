@@ -1,180 +1,111 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:komun_apps/components/uploadImageMessage.dart';
-import 'package:komun_apps/pages/profile/profileUser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../components/Helper.dart';
-import '../../components/config.dart';
-import '../../components/constanta.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:android_intent/android_intent.dart';
-import 'dart:ui';
+import 'package:komun_apps/components/uploadImageMessage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../components/config.dart';
+import '../../components/Helper.dart';
 
-class ChatDetail extends StatefulWidget {
+class ChatRoom extends StatefulWidget {
   final String id;
-  final String name;
-  final String tujuan;
-  final String dari;
-  final String call;
-  ChatDetail({this.id, this.name, this.tujuan, this.call, this.dari});
+  ChatRoom(this.id);
 
   @override
-  _ChatDetailState createState() => _ChatDetailState();
+  _ChatRoomState createState() => _ChatRoomState();
 }
 
-class _ChatDetailState extends State<ChatDetail> {
-  int page = 20;
-  bool isLoading = false;
-  ScrollController _scrollController = new ScrollController();
-  String users = "";
-  TextEditingController sendController = TextEditingController();
-  final Helper helper = Helper();
-  FirebaseMessaging fm = FirebaseMessaging();
-
-  _ChatDetailState() {
+class _ChatRoomState extends State<ChatRoom> {
+  _ChatRoomState() {
     fm.configure(
       onLaunch: (Map<String, dynamic> msg) async {
-        // print("ketika sedang berjalan");
-        // print(msg);
-
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         }
       },
       onResume: (Map<String, dynamic> msg) async {
-        // print("ketika sedang berjalan");
-        // print(msg);
-
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         }
       },
       onMessage: (Map<String, dynamic> msg) async {
-        // print("ketika sedang berjalan");
-        // print(msg);
         if (msg['data']['screen'] == 'list_trx' &&
             msg['notification']['body'] != null) {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         } else if (msg['data']['screen'] == 'list_notif') {
           helper.alertLog(msg['notification']['body']);
-          _getMoreData(page);
+          getMessage();
         }
       },
     );
   }
 
-  List<dynamic> dataUser;
-  _getMoreData(int index) async {
-    if (!isLoading) {
-      setState(() {
-        isLoading = true;
-      });
-      var url = await http.post(Config.BASE_URL + "getMessage", body: {
-        "start": "0",
-        "length": index.toString(),
-        "draw": "1",
-        "searching": "",
-        "id": widget.id
-      });
-      // final response = jsonDecode(url.body);
-      Map<String, dynamic> response = jsonDecode(url.body);
+  @override
+  void initState() {
+    super.initState();
+    getData();
+    getMessage();
+  }
 
+  TextEditingController sendController = TextEditingController();
+  FirebaseMessaging fm = FirebaseMessaging();
+  final Helper helper = Helper();
+  String nama;
+  String idPenerima;
+  String tokenFcm;
+
+  getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var userId = pref.getString("idUser");
+    getCurrent();
+    final request = await http.post(Config.BASE_URL + "get_detail_room",
+        body: {"id": widget.id, "user_id": userId});
+
+    final response = jsonDecode(request.body);
+    print(response);
+    if (response["status"] == 200) {
       setState(() {
-        dataUser = response["data"];
-        isLoading = false;
-        page++;
+        nama = response["nama"];
+        idPenerima = response["id_penerima"];
+        tokenFcm = response["token_fcm"];
       });
+    } else {
+      helper.alertLog("Terjadi kesalahan");
     }
   }
 
+  ScrollController _scrollController = new ScrollController();
+  List<dynamic> dataList;
+  getMessage() async {
+    final request = await http
+        .post(Config.BASE_URL + "get_detail_pesan", body: {"id": widget.id});
+    Map<String, dynamic> response = jsonDecode(request.body);
+    setState(() {
+      dataList = response["data"];
+    });
+    print(response);
+  }
+
+  String users = "";
   getCurrent() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user = sharedPreferences.get('idUser');
     setState(() {
       users = user;
     });
-  }
-
-  _sendMessage() async {
-    print(widget.tujuan);
-    final response = await http.post(Config.BASE_URL + "sendMessage", body: {
-      "id_chat": widget.id,
-      "message": sendController.text,
-      "sender": users,
-      "recipient": widget.tujuan != users ? widget.tujuan : widget.dari
-    });
-
-    setState(() {
-      sendController.clear();
-    });
-    final res = jsonDecode(response.body);
-    if (res['status'] == "200") {
-      _getMoreData(page);
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    }
-  }
-
-  
-  void _launchTurnByTurnNavigationInGoogleMaps(String tujuan) {
-    final AndroidIntent intent = AndroidIntent(
-        action: 'action_view',
-        data: Uri.encodeFull('http://maps.google.com/maps?daddr=$tujuan'),
-        package: 'com.google.android.apps.maps');
-    intent.launch();
-  }
-
-  Timer timer;
-  @override
-  void initState() {
-    super.initState();
-    getCurrent();
-    _getMoreData(page);
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _getMoreData(page);
-      }
-
-      // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    });
-    timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
-    //   _getMoreData(page);
-    });
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
-  Widget _buildProgressIndicator() {
-    return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Center(
-        child: new Opacity(
-          opacity: isLoading ? 1.0 : 00,
-          child: new Container(),
-        ),
-      ),
-    );
   }
 
   bool isLastMessageRight(int index, String sender) {
@@ -193,14 +124,17 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
-  viewUser(String id) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => ProfileUser(
-                  id: id,
-                )));
+  bool isLoading = false;
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new Container(),
+        ),
+      ),
+    );
   }
 
   String text = "";
@@ -209,8 +143,8 @@ class _ChatDetailState extends State<ChatDetail> {
     setState(() {
       text = information;
     });
-    _getMoreData(page);
-	  _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    getMessage();
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
 
   void toUpload() async {
@@ -221,62 +155,45 @@ class _ChatDetailState extends State<ChatDetail> {
           builder: (context) => UploadImageMessage(
               link: "SendMessageImage",
               id: widget.id,
-              recepient: widget.tujuan != users ? widget.tujuan : widget.dari)),
+              recepient:idPenerima )),
     );
     updateInformation(information);
   }
 
+  _kirimPesan() async {
+    final request = await http.post(Config.BASE_URL + "kirim_pesan", body: {
+      "kode_pesan": widget.id,
+      "pengirim": users,
+      "penerima": idPenerima,
+      "token_fcm": tokenFcm,
+      "jenis_pesan": "0",
+      "isi_pesan": sendController.text,
+      "hapus_by_pengirim": "0",
+      "hapus_by_penerima": "0"
+    });
+    final response = jsonDecode(request.body);
+
+    if (response["status"] == 200) {
+      sendController.clear();
+      getMessage();
+    }
+  }
+
+  _scrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor,
+        backgroundColor: Color(0xFF0c53a0),
         elevation: 0,
         title: Text(
-          "Chatting with ${widget.name}",
+          "Chatting with $nama",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.call),
-              onPressed: () {
-                launch("tel://${widget.call}");
-              }),
-          PopupMenuButton(
-              onSelected: (value) {
-                if (value == 0) {
-                  viewUser(widget.tujuan);
-                } else {
-                  viewUser(widget.tujuan);
-                }
-              },
-              itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.people, color: Colors.black),
-                          SizedBox(width: 8.0),
-                          Text("Profile",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14.0, color: Color(0xFF70747F))),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 0,
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.pin_drop, color: Colors.black),
-                          SizedBox(width: 8.0),
-                          Text("Lokasi",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14.0, color: Color(0xFF70747F))),
-                        ],
-                      ),
-                    ),
-                  ])
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -287,32 +204,31 @@ class _ChatDetailState extends State<ChatDetail> {
                       image: AssetImage("images/bg.png"), fit: BoxFit.cover)),
               child: Column(
                 children: [
-                  dataUser == null
-                      ? Center(
-                          child: Container(),
-                        )
+                  dataList == null
+                      ? Center(child: CircularProgressIndicator())
                       : SizedBox(
                           height: MediaQuery.of(context).size.height * 0.80,
                           child: ListView.builder(
                               controller: _scrollController,
                               reverse: false,
-                              itemCount: dataUser.length == null
+                              itemCount: dataList.length == null
                                   ? 0
-                                  : dataUser.length + 1,
+                                  : dataList.length + 1,
                               itemBuilder: (BuildContext context, int index) {
-                                if (index == dataUser.length ||
-                                    dataUser.length == null) {
+                                if (index == dataList.length ||
+                                    dataList.length == null) {
                                   return _buildProgressIndicator();
                                 } else {
-                                  return dataUser[index]['sender'] == users
+                                  return dataList[index]['pengirim'] == users
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            dataUser[index]['type'] == "0"
+                                            dataList[index]['jenis_pesan'] ==
+                                                    "0"
                                                 ? Container(
                                                     child: Text(
-                                                      "${dataUser[index]['message']}",
+                                                      "${dataList[index]['isi_pesan']}",
                                                       style: GoogleFonts.ptSans(
                                                           fontSize: 18),
                                                     ),
@@ -335,14 +251,14 @@ class _ChatDetailState extends State<ChatDetail> {
                                                         top: 10),
                                                   )
                                                 : Container(
-                                                    child: dataUser[index]
-                                                                ['message'] ==
+                                                    child: dataList[index]
+                                                                ['isi_pesan'] ==
                                                             null
                                                         ? CircularProgressIndicator()
                                                         : Image.network(
                                                             Config.BASE_URL_IMAGE +
-                                                                dataUser[index]
-                                                                    ['message'],
+                                                                dataList[index][
+                                                                    'isi_pesan'],
                                                             fit: BoxFit.fill,
                                                           ),
                                                     decoration: BoxDecoration(
@@ -352,7 +268,6 @@ class _ChatDetailState extends State<ChatDetail> {
                                                             BorderRadius
                                                                 .circular(8.0)),
                                                     width: 200,
-                                                    
                                                     margin: EdgeInsets.only(
                                                         bottom: 10.0,
                                                         right: 10,
@@ -364,10 +279,11 @@ class _ChatDetailState extends State<ChatDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            dataUser[index]['type'] == "0"
+                                            dataList[index]['jenis_pesan'] ==
+                                                    "0"
                                                 ? Container(
                                                     child: Text(
-                                                      "${dataUser[index]['message']}",
+                                                      "${dataList[index]['isi_pesan']}",
                                                       style: GoogleFonts.ptSans(
                                                           fontSize: 18),
                                                     ),
@@ -390,14 +306,14 @@ class _ChatDetailState extends State<ChatDetail> {
                                                         left: 10),
                                                   )
                                                 : Container(
-                                                    child: dataUser[index]
-                                                                ['message'] ==
+                                                    child: dataList[index]
+                                                                ['isi_pesan'] ==
                                                             null
                                                         ? CircularProgressIndicator()
                                                         : Image.network(
                                                             Config.BASE_URL_IMAGE +
-                                                                dataUser[index]
-                                                                    ['message'],
+                                                                dataList[index][
+                                                                    'isi_pesan'],
                                                             fit: BoxFit.fill,
                                                           ),
                                                     decoration: BoxDecoration(
@@ -407,7 +323,6 @@ class _ChatDetailState extends State<ChatDetail> {
                                                             BorderRadius
                                                                 .circular(8.0)),
                                                     width: 200,
-                                                    
                                                     margin: EdgeInsets.only(
                                                         bottom: 10.0,
                                                         right: 10,
@@ -442,8 +357,8 @@ class _ChatDetailState extends State<ChatDetail> {
                           color: Colors.blueGrey,
                         ),
                         onPressed: () {
-                          toUpload();
-                        },
+							toUpload();
+						},
                       ),
                       title: TextField(
                         maxLines: null,
@@ -462,14 +377,14 @@ class _ChatDetailState extends State<ChatDetail> {
                         onPressed: () {
                           sendController.text.length <= 0
                               ? helper.alertLog("Nothing to send")
-                              : _sendMessage();
+                              : _kirimPesan();
                         },
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
