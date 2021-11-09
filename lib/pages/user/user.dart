@@ -43,7 +43,6 @@ class _UserState extends State<User> {
       // final response = jsonDecode(url.body);
       Map<String, dynamic> response = jsonDecode(url.body);
 
-      print("$index");
       setState(() {
         dataUser = response["data"];
         isLoading = false;

@@ -36,7 +36,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     final response = await http
         .post(Config.BASE_URL + "getById", body: {"id": widget.index});
     final res = jsonDecode(response.body);
-    print(res);
+  
     if (res['status'] == 200) {
       setState(() {
         namaKomunitas = res['values']['nama_komunitas'];
@@ -58,7 +58,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     final response = await http
         .post(Config.BASE_URL + "getAlbum", body: {"id": widget.index});
     Map<String, dynamic> res = jsonDecode(response.body);
-    print(res);
+   
     setState(() {
       album = res['values'];
     });

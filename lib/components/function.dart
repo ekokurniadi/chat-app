@@ -22,7 +22,7 @@ class Functional {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var alamat = addresses.first;
 
-    // print(alamat.addressLine.toString());
+    
     final response = await http.post(Config.BASE_URL + "sendLocation", body: {
       "id": userId,
       "latitude": position.latitude.toString(),
@@ -30,10 +30,8 @@ class Functional {
       "afc": alamat.addressLine.toString(),
     });
     final res = jsonDecode(response.body);
-	// print(position.latitude.toString());
-    // print(res);
     if (res['status'] == 200) {
-    //   print("Lokasi Petugas saat ini : $position");
+		
     } else {
       print("Gagal mendapatkan lokasi");
     }

@@ -103,15 +103,19 @@ class _HomeState extends State<Home> {
     jumlahNotif = 0;
     pageController = PageController(initialPage: bottomNavBarIndex);
     prosesLogout = false;
-    timer = Timer.periodic(Duration(seconds: 2), (Timer timer) async{
-      functional.sendLocation();
+    timer = Timer.periodic(Duration(seconds: 2), (Timer timer) async {
+      await loca();
     });
+  }
+
+  loca() {
+    functional.sendLocation();
   }
 
   @override
   void dispose() {
     super.dispose();
-	timer?.cancel();
+    timer?.cancel();
   }
 
   logOut() async {

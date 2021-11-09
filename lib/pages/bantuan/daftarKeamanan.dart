@@ -49,7 +49,6 @@ class _DaftarKeamananState extends State<DaftarKeamanan> {
     final response = await http
         .post(Config.BASE_URL + "getCurrentUser", body: {"id": userId});
     final res = jsonDecode(response.body);
-    print(res);
     if (res['status'] == 200) {
       setState(() {
         loading = false;

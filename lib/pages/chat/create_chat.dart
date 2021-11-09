@@ -46,7 +46,7 @@ class _CreateChatState extends State<CreateChat> {
       // final response = jsonDecode(url.body);
       Map<String, dynamic> response = jsonDecode(url.body);
 
-      print("$index");
+   
       setState(() {
         dataUser = response["data"];
         isLoading = false;
@@ -67,15 +67,15 @@ class _CreateChatState extends State<CreateChat> {
     });
     final res = jsonDecode(response.body);
 	print(res);
-    // if (res['status'] == "200") {
-    //   setState(() {
-    //     prosesLoading = false;
-    //     idPesan = res['id_pesan'];
-    //     idPenerima = res['penerima'];
-    //   });
-    //   Navigator.pushReplacement(
-    //       context, MaterialPageRoute(builder: (context) => ChatRoom(idPesan)));
-    // }
+    if (res['status'] == "200") {
+      setState(() {
+        prosesLoading = false;
+        idPesan = res['id_pesan'];
+        idPenerima = res['penerima'];
+      });
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => ChatRoom(idPesan)));
+    }
   }
 
   @override
