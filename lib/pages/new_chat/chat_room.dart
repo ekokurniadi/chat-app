@@ -93,7 +93,7 @@ class _ChatRoomState extends State<ChatRoom> {
     }
   }
 
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollController = new ScrollController(initialScrollOffset: 0);
   List<dynamic> dataList;
   getMessage() async {
     final request = await http
@@ -286,8 +286,8 @@ class _ChatRoomState extends State<ChatRoom> {
                 } else if (value == 2) {
                   requestLocation();
                 } else {
-					viewUser(idPenerima);
-				}
+                  viewUser(idPenerima);
+                }
               },
               offset: const Offset(0, 300),
               icon: Icon(Icons.more_vert, color: Colors.white),

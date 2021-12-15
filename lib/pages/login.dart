@@ -41,6 +41,7 @@ class _LoginState extends State<Login> {
       "token": tokenFcm
     });
     final res = jsonDecode(response.body);
+	print(res);
     String value = res['status'];
     String message = res['message'];
     String idUser = res['idUser'].toString();
@@ -122,7 +123,7 @@ class _LoginState extends State<Login> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                        hintText: "No. Telp",
+                        hintText: "Phone Number",
                         hintStyle: GoogleFonts.poppins(color: primaryColor),
                         prefixIcon: Icon(
                           Icons.people_outline,
@@ -165,7 +166,7 @@ class _LoginState extends State<Login> {
                   child: Center(
                       child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text("Lupa Password",
+                          child: Text("Forgot password",
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white)))),
@@ -197,7 +198,7 @@ class _LoginState extends State<Login> {
                   width: MediaQuery.of(context).size.width * 0.80,
                   height: 40,
                   child: Center(
-                      child: Text("Daftar akun baru",
+                      child: Text("Create new account",
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400, color: Colors.white))),
                 ),

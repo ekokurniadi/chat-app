@@ -137,7 +137,7 @@ class _RegisterState extends State<Register> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text(
-              "Upload Foto Profile Anda",
+              "Upload your profile picture",
               style: GoogleFonts.poppins(fontSize: 15.0),
             ),
             actions: [
@@ -173,7 +173,7 @@ class _RegisterState extends State<Register> {
                             Icon(Icons.picture_in_picture,
                                 color: Colors.blueGrey),
                             Text(
-                              "Galeri",
+                              "Galery",
                               style: GoogleFonts.poppins(
                                   color: primaryColor,
                                   fontWeight: FontWeight.bold),
@@ -201,7 +201,7 @@ class _RegisterState extends State<Register> {
                           children: [
                             Icon(Icons.camera_front, color: Colors.blueGrey),
                             Text(
-                              "Kamera",
+                              "Camera",
                               style: GoogleFonts.poppins(
                                   color: primaryColor,
                                   fontWeight: FontWeight.bold),
@@ -264,7 +264,7 @@ class _RegisterState extends State<Register> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Nama Lengkap",
+                          hintText: "Name",
                           hintStyle: GoogleFonts.poppins(color: primaryColor),
                           prefixIcon: Icon(
                             Icons.people_outline,
@@ -287,7 +287,7 @@ class _RegisterState extends State<Register> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Alamat",
+                          hintText: "Address",
                           hintStyle: GoogleFonts.poppins(color: primaryColor),
                           prefixIcon: Icon(
                             Icons.home,
@@ -310,7 +310,7 @@ class _RegisterState extends State<Register> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "No. Telp",
+                          hintText: "Phone Number",
                           hintStyle: GoogleFonts.poppins(color: primaryColor),
                           prefixIcon: Icon(
                             Icons.call,
@@ -346,7 +346,7 @@ class _RegisterState extends State<Register> {
                 ),
                 GestureDetector(
                   onTap: () => base64Image == ""
-                      ? helper.alertLog("Silahkan upload foto terlebih dahulu")
+                      ? helper.alertLog("Please upload your profile picture")
                       : startUpload(),
                   child: Container(
                     margin: EdgeInsets.only(top: 14),
@@ -356,7 +356,7 @@ class _RegisterState extends State<Register> {
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
-                        child: Text("Simpan",
+                        child: Text("Submit",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white))),
@@ -375,7 +375,7 @@ class _RegisterState extends State<Register> {
                     width: MediaQuery.of(context).size.width * 0.80,
                     height: 40,
                     child: Center(
-                        child: Text("Sudah punya akun ? login disini",
+                        child: Text("Have an account ? login here",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 color: primaryColor))),

@@ -57,7 +57,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       });
     } else {
       statusConfirm = false;
-      status = "Password tidak cocok";
+      status = "Password not match";
     }
   }
 
@@ -109,7 +109,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                        hintText: "No. Telp",
+                        hintText: "Phone Number",
                         hintStyle: GoogleFonts.poppins(color: primaryColor),
                         prefixIcon: Icon(
                           Icons.people_outline,
@@ -134,7 +134,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         labelStyle: GoogleFonts.poppins(),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                        hintText: "Password Baru",
+                        hintText: "New Password",
                         hintStyle: GoogleFonts.poppins(color: primaryColor),
                         prefixIcon:
                             Icon(Icons.lock, size: 23, color: primaryColor)),
@@ -162,7 +162,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         labelStyle: GoogleFonts.poppins(),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                        hintText: "Ulangi Password Baru",
+                        hintText: "Confirm New Password",
                         hintStyle: GoogleFonts.poppins(color: primaryColor),
                         prefixIcon:
                             Icon(Icons.lock, size: 23, color: primaryColor)),
@@ -188,7 +188,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       color: Colors.orange,
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
-                      child: Text("Simpan",
+                      child: Text("Submit",
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600,
                               color: Colors.white))),
@@ -204,7 +204,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   width: MediaQuery.of(context).size.width * 0.80,
                   height: 40,
                   child: Center(
-                      child: Text("Daftar akun baru",
+                      child: Text("Create New Account",
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
                               color: primaryColor))),

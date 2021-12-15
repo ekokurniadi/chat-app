@@ -14,6 +14,8 @@ import 'package:komun_apps/pages/login.dart';
 import 'package:komun_apps/pages/new_chat/list_chat.dart';
 import 'package:komun_apps/pages/notif/notif.dart';
 import 'package:komun_apps/pages/profile/profile.dart';
+import 'package:komun_apps/pages/setting/setting.dart';
+import 'package:komun_apps/pages/terms/terms.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
@@ -134,7 +136,7 @@ class _HomeState extends State<Home> {
     });
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Login()));
-    helper.alertLog("Anda Telah Log Out !");
+    helper.alertLog("Successfully Log Out !");
   }
 
   @override
@@ -178,19 +180,34 @@ class _HomeState extends State<Home> {
               ),
             ),
             ListTile(
-              title: Text("Buat Komunitas"),
+              title: Text("Create Community"),
               onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Index()));
               },
             ),
             ListTile(
-              title: Text("Daftar Sebagai Keamanan"),
+              title: Text("Register as security"),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => DaftarKeamanan()));
               },
-            )
+            ),
+            ListTile(
+              title: Text("Setting"),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Setting()));
+              },
+            ),
+            ListTile(
+              title: Text("Terms and Conditions"),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Terms()));
+              },
+            ),
+          
           ],
         ),
       ),
@@ -208,7 +225,7 @@ class _HomeState extends State<Home> {
           items: [
             BottomNavyBarItem(
                 icon: Icon(CupertinoIcons.home),
-                title: Text('Beranda',
+                title: Text('Home',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                 activeColor: Color(0xFF306bdd),
                 inactiveColor: Color(0xFF70747F),
@@ -241,7 +258,7 @@ class _HomeState extends State<Home> {
                 textAlign: TextAlign.start),
             BottomNavyBarItem(
                 icon: Icon(Icons.people),
-                title: Text('Bantuan',
+                title: Text('Get Help',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                 activeColor: Color(0xFF306bdd),
                 inactiveColor: Color(0xFF70747F),

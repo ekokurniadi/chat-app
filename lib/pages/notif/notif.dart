@@ -67,25 +67,16 @@ class _NotificationPageState extends State<NotificationPage> {
     timeNotif?.cancel();
   }
 
-  createBroadcastMessage(){
-     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CreateBroadcastMessageCommunity()));
+  createBroadcastMessage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CreateBroadcastMessageCommunity()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: levelUser == "user"
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  createBroadcastMessage();
-                },
-                child: Icon(Icons.message),
-              ),
-            )
-          : Container(),
       body: SingleChildScrollView(
         child: Column(
           children: [

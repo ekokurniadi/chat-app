@@ -522,29 +522,29 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      ListTile(
-                        title: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Active",
-                                  style: GoogleFonts.poppins(),
-                                ),
-                                Switch(
-                                  value: terima,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      terima = value;
-                                    });
-                                    updateState(value);
-                                  },
-                                  activeTrackColor: Colors.lightBlueAccent,
-                                  activeColor: Colors.blue,
-                                ),
-                              ],
-                            )),
-                      ),
+                    //   ListTile(
+                    //     title: Container(
+                    //         width: MediaQuery.of(context).size.width,
+                    //         child: Row(
+                    //           children: [
+                    //             Text(
+                    //               "Active",
+                    //               style: GoogleFonts.poppins(),
+                    //             ),
+                    //             Switch(
+                    //               value: terima,
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   terima = value;
+                    //                 });
+                    //                 updateState(value);
+                    //               },
+                    //               activeTrackColor: Colors.lightBlueAccent,
+                    //               activeColor: Colors.blue,
+                    //             ),
+                    //           ],
+                    //         )),
+                    //   ),
                       ListTile(
                         title: GestureDetector(
                           onTap: () {

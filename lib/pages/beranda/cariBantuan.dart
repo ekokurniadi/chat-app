@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/pages/chat/chatdetail.dart';
+import 'package:komun_apps/pages/new_chat/chat_room.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tabbar/tabbar.dart';
 import '../../components/Helper.dart';
@@ -22,6 +23,7 @@ class _CariBantuanState extends State<CariBantuan> {
   String idRoom = "";
   String namaPenerima = "";
   String idPenerima = "";
+  String idPesan = "";
   Timer timer;
   @override
   void initState() {
@@ -60,39 +62,26 @@ class _CariBantuanState extends State<CariBantuan> {
     return "Success";
   }
 
-  createMessage(String recepientId, String recepientName) async {
+   createMessage(String recepientId) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var user = sharedPreferences.get('idUser');
-    var userName = sharedPreferences.get('nama');
-    print("sender:$user");
-    print("namaPengirim:$userName");
-    print("recipient:$recepientId");
-    print("recipientName:$recepientName");
     setState(() {
       prosesLoading = true;
     });
-    final response = await http.post(Config.BASE_URL + "createMessage", body: {
-      "sender": user,
-      "senderName": userName,
-      "recipient": recepientId,
-      "recipientName": recepientName
+    final response = await http.post(Config.BASE_URL + "buat_pesan", body: {
+      "pengirim": user,
+      "penerima": recepientId,
     });
     final res = jsonDecode(response.body);
+	print(res);
     if (res['status'] == "200") {
       setState(() {
         prosesLoading = false;
-        idRoom = res['idRoom'];
-        namaPenerima = res['recepient'];
-        idPenerima = res['recepientId'];
+        idPesan = res['id_pesan'];
+        idPenerima = res['penerima'];
       });
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChatDetail(
-                    id: idRoom,
-                    name: namaPenerima,
-                    tujuan: idPenerima,
-                  )));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => ChatRoom(idPesan)));
     }
   }
 
@@ -115,7 +104,7 @@ class _CariBantuanState extends State<CariBantuan> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(color: Colors.transparent),
-                      child: Text("Membantu",
+                      child: Text("Assist",
                           style: GoogleFonts.poppins(color: Color(0xFF306bdd))),
                     ),
                   ),
@@ -123,7 +112,7 @@ class _CariBantuanState extends State<CariBantuan> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(color: Colors.transparent),
-                      child: Text("Bantuan",
+                      child: Text("Get Help",
                           style: GoogleFonts.poppins(color: Color(0xFF306bdd))),
                     ),
                   ),
@@ -155,7 +144,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                   width: 250,
                                 ),
                                 Text(
-                                  "Belum ada yang membutuhkan bantuan anda.",
+                                  "Nothing to show",
                                   style: GoogleFonts.poppins(),
                                 )
                               ],
@@ -236,7 +225,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                                         color: Colors.green),
                                                     child: Center(
                                                       child: Text(
-                                                        "Terima",
+                                                        "Accept",
                                                         style:
                                                             GoogleFonts.poppins(
                                                                 color: Colors
@@ -265,7 +254,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                                         color: Colors.red),
                                                     child: Center(
                                                       child: Text(
-                                                        "Tolak",
+                                                        "Reject",
                                                         style:
                                                             GoogleFonts.poppins(
                                                                 color: Colors
@@ -307,7 +296,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                   width: 250,
                                 ),
                                 Text(
-                                  "Data tidak ditemukan",
+                                  "Nothing to show",
                                   style: GoogleFonts.poppins(),
                                 )
                               ],
@@ -345,12 +334,12 @@ class _CariBantuanState extends State<CariBantuan> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  "Tanggal : ${dataBantuan[index]['tanggal']}",
+                                                  "Date : ${dataBantuan[index]['tanggal']}",
                                                   style: GoogleFonts.poppins(),
                                                 ),
                                                 Text(" / "),
                                                 Text(
-                                                  "Jam : ${dataBantuan[index]['jam']}",
+                                                  "Time : ${dataBantuan[index]['jam']}",
                                                   style: GoogleFonts.poppins(),
                                                 ),
                                               ],
@@ -360,7 +349,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                             margin: EdgeInsets.only(
                                                 top: 8, left: 8),
                                             child: Text(
-                                              "Catatan : ${dataBantuan[index]['keterangan']}",
+                                              "Note : ${dataBantuan[index]['keterangan']}",
                                               style: GoogleFonts.poppins(),
                                             ),
                                           ),
@@ -368,7 +357,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                             margin: EdgeInsets.only(
                                                 top: 8, left: 8),
                                             child: Text(
-                                              "Lokasi : ${dataBantuan[index]['alamat']}",
+                                              "Address : ${dataBantuan[index]['alamat']}",
                                               style: GoogleFonts.poppins(),
                                             ),
                                           ),
@@ -376,7 +365,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                             margin: EdgeInsets.only(
                                                 top: 8, left: 8),
                                             child: Text(
-                                              "Pembantu : ${dataBantuan[index]['pembantu']}",
+                                              "Assistant : ${dataBantuan[index]['pembantu']}",
                                               style: GoogleFonts.poppins(),
                                             ),
                                           ),
@@ -398,7 +387,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                                         color: Colors.red),
                                                     child: Center(
                                                       child: Text(
-                                                        "Batalkan",
+                                                        "Cancel",
                                                         style:
                                                             GoogleFonts.poppins(
                                                                 color: Colors
@@ -414,9 +403,7 @@ class _CariBantuanState extends State<CariBantuan> {
                                                   onTap: () {
                                                     createMessage(
                                                         dataBantuan[index]
-                                                            ['recipient'],
-                                                        dataBantuan[index]
-                                                            ['pembantu']);
+                                                            ['recipient']);
                                                   },
                                                   child: Container(
                                                     margin: EdgeInsets.only(
