@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:komun_apps/pages/splashscreen.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 // import 'package:komun_apps/pages/splashscreen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize without device test ids
+  FirebaseAdMob.instance.initialize(appId: "ca-app-pub-3137462128319942~6703857224");
   runApp(MyApp());
 }
 

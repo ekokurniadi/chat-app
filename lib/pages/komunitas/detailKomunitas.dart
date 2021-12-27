@@ -89,7 +89,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Foto',
+                  'Photo',
                 ),
                 IconButton(
                     icon: Icon(
@@ -232,7 +232,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                                     color: primaryColor,
                                   ),
                                   padding: EdgeInsets.all(5),
-                                  child: Text("$pengikut Pengikut",
+                                  child: Text("$pengikut Followers",
                                       style: GoogleFonts.poppins(color:Colors.white)),
                                 ),
                               ),
@@ -277,13 +277,13 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
             Container(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "Postingan",
+                "Feeds",
                 style: GoogleFonts.poppins(color: Colors.blueGrey),
               ),
             ),
             album == null
                 ? Center(
-                    child: Text("Belum ada Postingan dari komunitas ini"),
+                    child: Text("Nothing to show"),
                   )
                 : Container(
                     height: MediaQuery.of(context).size.height * 0.80,

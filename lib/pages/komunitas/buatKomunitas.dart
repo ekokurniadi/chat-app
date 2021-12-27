@@ -244,7 +244,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
-          "BuatKomunitas",
+          "Create a Community",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
@@ -273,7 +273,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Nama Komunitas",
+                          hintText: "Name of Community",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.people_outline,
@@ -301,7 +301,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Tentang Komunitas",
+                          hintText: "About",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.album,
@@ -328,7 +328,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Kegiatan Komunitas",
+                          hintText: "Activity",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.track_changes,
@@ -355,7 +355,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Info Komunitas",
+                          hintText: "Info",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.info,
@@ -378,7 +378,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Lokasi Komunitas",
+                          hintText: "Address",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.pin_drop,
@@ -401,7 +401,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Contact Komunitas",
+                          hintText: "Contact",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.phone,
@@ -447,7 +447,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                 ),
                 GestureDetector(
                   onTap: () => base64Image == ""
-                      ? helper.alertLog("Silahkan upload foto terlebih dahulu")
+                      ? helper.alertLog("Please upload a photo first")
                       : startUpload(),
                   child: Container(
                     margin: EdgeInsets.only(top: 14),
@@ -457,7 +457,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
-                        child: Text("Simpan",
+                        child: Text("Submit",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white))),

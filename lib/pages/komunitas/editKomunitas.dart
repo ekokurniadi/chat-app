@@ -106,7 +106,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
-          "EditKomunitas",
+          "Edit Community",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
@@ -194,7 +194,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Nama Komunitas",
+                          hintText: "Name of Community",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.people_outline,
@@ -222,7 +222,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Tentang Komunitas",
+                          hintText: "About",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.album,
@@ -249,7 +249,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Kegiatan Komunitas",
+                          hintText: "Activity",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.track_changes,
@@ -276,7 +276,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Info Komunitas",
+                          hintText: "Info",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.info,
@@ -299,7 +299,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Lokasi Komunitas",
+                          hintText: "Address",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.pin_drop,
@@ -322,7 +322,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 24, top: 14.0),
-                          hintText: "Contact Komunitas",
+                          hintText: "Contact",
                           hintStyle: GoogleFonts.poppins(color: Colors.blueGrey),
                           prefixIcon: Icon(
                             Icons.phone,
@@ -342,7 +342,7 @@ class _EditKomunitasState extends State<EditKomunitas> {
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
-                        child: Text("Simpan",
+                        child: Text("Submit",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white))),

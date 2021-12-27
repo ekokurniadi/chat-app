@@ -8,6 +8,7 @@ import 'package:komun_apps/pages/notif/createBroadcastMessageCommunity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/config.dart';
 import '../../components/Helper.dart';
+import 'package:komun_apps/pages/addMob.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -80,6 +81,7 @@ class _NotificationPageState extends State<NotificationPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            AdMobPage(),
             dataList == null
                 ? Center(
                     child: Container(
@@ -92,7 +94,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             width: 250,
                           ),
                           Text(
-                            "Tidak ada data",
+                            "Nothing to show",
                             style: GoogleFonts.poppins(),
                           )
                         ],

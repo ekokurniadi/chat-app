@@ -62,7 +62,7 @@ class _IndexState extends State<Index> {
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
-          "Komunitas",
+          "List Of Community",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
@@ -99,7 +99,7 @@ class _IndexState extends State<Index> {
                   style: GoogleFonts.poppins(),
                   controller: controllerSearch,
                   decoration: new InputDecoration(
-                    hintText: 'Pencarian',
+                    hintText: 'Search',
                     hintStyle: GoogleFonts.poppins(),
                     border: InputBorder.none,
                   ),
@@ -153,7 +153,7 @@ class _IndexState extends State<Index> {
                             width: 250,
                           ),
                           Text(
-                            "Komunitas tidak ditemukan",
+                            "Data not found",
                             style: GoogleFonts.poppins(),
                           )
                         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:komun_apps/pages/addMob.dart';
 import 'package:komun_apps/pages/login.dart';
 import '../components/Helper.dart';
 import '../components/config.dart';
@@ -381,6 +382,7 @@ class _RegisterState extends State<Register> {
                                 color: primaryColor))),
                   ),
                 ),
+				 AdMobPage(),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.15,
                   height: 3,

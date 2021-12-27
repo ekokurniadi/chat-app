@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:komun_apps/components/uploadImageMessage.dart';
-import 'package:komun_apps/pages/new_chat/list_chat.dart';
+import 'package:komun_apps/pages/addMob.dart';
 import 'package:komun_apps/pages/profile/profileUser.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -487,6 +487,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                   }
                                 }),
                           ),
+					AdMobPage(),
                     Container(
                       margin:
                           EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),

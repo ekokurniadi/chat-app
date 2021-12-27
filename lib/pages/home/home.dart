@@ -8,14 +8,16 @@ import 'package:komun_apps/components/function.dart';
 import 'package:komun_apps/pages/bantuan/daftarKeamanan.dart';
 import 'package:komun_apps/pages/beranda/beranda.dart';
 import 'package:komun_apps/pages/beranda/cariBantuan.dart';
+// ignore: unused_import
 import 'package:komun_apps/pages/chat/chat.dart';
 import 'package:komun_apps/pages/komunitas/index.dart';
 import 'package:komun_apps/pages/login.dart';
 import 'package:komun_apps/pages/new_chat/list_chat.dart';
 import 'package:komun_apps/pages/notif/notif.dart';
+import 'package:komun_apps/pages/panduan/komun.dart';
+import 'package:komun_apps/pages/panduan/panduan_komun.dart';
 import 'package:komun_apps/pages/profile/profile.dart';
 import 'package:komun_apps/pages/setting/setting.dart';
-import 'package:komun_apps/pages/terms/terms.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
@@ -204,10 +206,16 @@ class _HomeState extends State<Home> {
               title: Text("Terms and Conditions"),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Terms()));
+                    MaterialPageRoute(builder: (context) => PanduanKomun()));
               },
             ),
-          
+            ListTile(
+              title: Text("About Komun Apps"),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Komun()));
+              },
+            ),
           ],
         ),
       ),

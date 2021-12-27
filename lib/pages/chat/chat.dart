@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/config.dart';
+import 'package:komun_apps/pages/addMob.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/pages/chat/chatdetail.dart';
 import 'package:komun_apps/pages/chat/create_chat.dart';
@@ -151,6 +152,7 @@ class _ChatState extends State<Chat> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+			  AdMobPage(),
             Container(
               margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
               width: MediaQuery.of(context).size.width,

@@ -7,6 +7,7 @@ import 'package:komun_apps/components/Helper.dart';
 import 'package:komun_apps/components/config.dart';
 import 'package:komun_apps/components/constanta.dart';
 import 'package:http/http.dart' as http;
+import 'package:komun_apps/pages/adMobIn.dart';
 import 'package:komun_apps/pages/forgotPassword.dart';
 import 'package:komun_apps/pages/home/home.dart';
 import 'package:komun_apps/pages/register.dart';
@@ -203,6 +204,7 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.w400, color: Colors.white))),
                 ),
               ),
+			  AdMobInPage(),
               Container(
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: 3,

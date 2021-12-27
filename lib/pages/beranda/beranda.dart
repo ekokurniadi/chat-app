@@ -5,9 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/config.dart';
 import 'package:komun_apps/pages/komunitas/detailKomunitas.dart';
+import 'package:komun_apps/pages/addMob.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tabbar/tabbar.dart';
 import '../../components/Helper.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 
 class Beranda extends StatefulWidget {
   @override
@@ -21,6 +24,35 @@ class _BerandaState extends State<Beranda> {
   final tabController = PageController(initialPage: 0);
   final Helper helper = Helper();
   List<dynamic> dataBeranda;
+  
+  // ignore: unused_field
+  BannerAd _bannerAd;
+  // ignore: unused_field
+  InterstitialAd _interstitialAd;
+  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo();
+  // ignore: unused_field
+  int _coins = 0;
+  // ignore: unused_field
+  final _nativeAdController = NativeAdmobController();
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+        targetingInfo: targetingInfo,
+        adUnitId: InterstitialAd.testAdUnitId,
+        listener: (MobileAdEvent event) {
+          print('interstitial event: $event');
+        });
+  }
+
+  BannerAd createBannerAdd() {
+    return BannerAd(
+        targetingInfo: targetingInfo,
+        adUnitId: BannerAd.testAdUnitId,
+        size: AdSize.smartBanner,
+        listener: (MobileAdEvent event) {
+          print('Bnner Event: $event');
+        });
+  }
+
   _getMoreData(String filter) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var idUser = pref.getString("idUser");
@@ -99,6 +131,19 @@ class _BerandaState extends State<Beranda> {
     _getMoreData("");
     _getMoreDataFollow("");
     _getCurrentUser();
+    _bannerAd = createBannerAdd()..load();
+    _interstitialAd = createInterstitialAd()..load();
+    RewardedVideoAd.instance.load(
+        adUnitId: RewardedVideoAd.testAdUnitId, targetingInfo: targetingInfo);
+    RewardedVideoAd.instance.listener =
+        (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+      print('Rewarded event: $event');
+      if (event == RewardedVideoAdEvent.rewarded) {
+        setState(() {
+          _coins += rewardAmount;
+        });
+      }
+    };
   }
 
   @override
@@ -114,7 +159,7 @@ class _BerandaState extends State<Beranda> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(color: Colors.transparent),
-                      child: Text("Semua",
+                      child: Text("All",
                           style: GoogleFonts.poppins(color: Color(0xFF306bdd))),
                     ),
                   ),
@@ -122,7 +167,7 @@ class _BerandaState extends State<Beranda> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(color: Colors.transparent),
-                      child: Text("Diikuti",
+                      child: Text("Following",
                           style: GoogleFonts.poppins(color: Color(0xFF306bdd))),
                     ),
                   ),
@@ -139,13 +184,7 @@ class _BerandaState extends State<Beranda> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Container(
-                //   margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
-                //   height: 50,
-                //   width: MediaQuery.of(context).size.width,
-                //   color: Colors.red,
-                //   child: Center(child: Text("iklan disini")),
-                // ),
+                AdMobPage(),
                 Container(
                   margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
                   width: MediaQuery.of(context).size.width,
@@ -170,7 +209,7 @@ class _BerandaState extends State<Beranda> {
                       style: GoogleFonts.poppins(),
                       controller: controllerSearch,
                       decoration: new InputDecoration(
-                        hintText: 'Pencarian',
+                        hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(),
                         border: InputBorder.none,
                       ),
@@ -222,7 +261,7 @@ class _BerandaState extends State<Beranda> {
                                 width: 250,
                               ),
                               Text(
-                                "Komunitas tidak ditemukan",
+                                "Nothing to show",
                                 style: GoogleFonts.poppins(),
                               )
                             ],
@@ -326,7 +365,7 @@ class _BerandaState extends State<Beranda> {
                                                       BorderRadius.circular(30),
                                                   color: Colors.blue),
                                               child: Text(
-                                                "Ikuti",
+                                                "Follow",
                                                 style: GoogleFonts.poppins(
                                                     color: Colors.white),
                                               ),
@@ -373,7 +412,7 @@ class _BerandaState extends State<Beranda> {
                       style: GoogleFonts.poppins(),
                       controller: controllerSearch,
                       decoration: new InputDecoration(
-                        hintText: 'Pencarian',
+                        hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(),
                         border: InputBorder.none,
                       ),
@@ -425,7 +464,7 @@ class _BerandaState extends State<Beranda> {
                                 width: 250,
                               ),
                               Text(
-                                "Komunitas tidak ditemukan",
+                                "Nothing to show",
                                 style: GoogleFonts.poppins(),
                               )
                             ],
@@ -530,7 +569,7 @@ class _BerandaState extends State<Beranda> {
                                                       BorderRadius.circular(30),
                                                   color: Colors.red),
                                               child: Text(
-                                                "Berhenti mengikuti",
+                                                "Unfollow",
                                                 style: GoogleFonts.poppins(
                                                     color: Colors.white),
                                               ),
@@ -545,7 +584,7 @@ class _BerandaState extends State<Beranda> {
                             );
                           },
                         ),
-                      )
+                      ),
               ],
             ),
           ),

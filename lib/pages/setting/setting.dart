@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/components/uploadImage.dart';
+import 'package:komun_apps/pages/adMobIn.dart';
 import 'package:komun_apps/components/uploadImageDemo.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,6 +78,7 @@ class _SettingState extends State<Setting> {
     _getDetailAlbum();
   }
 
+  // ignore: unused_element
   void _showPassword() {
     setState(() {
       _obsecureText = !_obsecureText;
@@ -147,6 +149,7 @@ class _SettingState extends State<Setting> {
     }
   }
 
+	// ignore: unused_element
   _saveSetting() async {
     setState(() {
       loading = true;
@@ -330,7 +333,7 @@ class _SettingState extends State<Setting> {
               ),
               Card(
                 margin: EdgeInsets.only(
-                    top: 10.0, left: 10.0, right: 10.0, bottom: 50.0),
+                    top: 10.0, left: 10.0, right: 10.0, bottom: 10.0),
                 elevation: 3.0,
                 child: Container(
                   child: Column(
@@ -368,6 +371,7 @@ class _SettingState extends State<Setting> {
                   ),
                 ),
               ),
+			  AdMobInPage()
             ],
           ),
         ),

@@ -131,7 +131,7 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
-  
+  // ignore: unused_element
   void _launchTurnByTurnNavigationInGoogleMaps(String tujuan) {
     final AndroidIntent intent = AndroidIntent(
         action: 'action_view',

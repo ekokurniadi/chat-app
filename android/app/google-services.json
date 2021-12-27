@@ -1,39 +1,32 @@
 {
-  "project_info": {
-    "project_number": "498619996009",
-    "project_id": "komun-apps",
-    "storage_bucket": "komun-apps.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:498619996009:android:5aa9d3294bd88f85390ff8",
-        "android_client_info": {
-          "package_name": "com.komunapps.com.komun_apps"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "498619996009-g7sge1071nosqivc91q1htpfj2v87s1s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtIjrry7OMUSLD73IBvFTBsYQmtJUpxVc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "498619996009-g7sge1071nosqivc91q1htpfj2v87s1s.apps.googleusercontent.com",
-              "client_type": 3
+    "project_info": {
+        "project_number": "498619996009",
+        "project_id": "komun-apps",
+        "storage_bucket": "komun-apps.appspot.com"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:498619996009:android:5aa9d3294bd88f85390ff8",
+            "android_client_info": {
+                "package_name": "com.komunapps.com.komun_apps"
             }
-          ]
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+        },
+        "oauth_client": [{
+            "client_id": "498619996009-g7sge1071nosqivc91q1htpfj2v87s1s.apps.googleusercontent.com",
+            "client_type": 3
+        }],
+        "api_key": [{
+            "current_key": "AIzaSyCtIjrry7OMUSLD73IBvFTBsYQmtJUpxVc"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": [{
+                    "client_id": "498619996009-g7sge1071nosqivc91q1htpfj2v87s1s.apps.googleusercontent.com",
+                    "client_type": 3
+                }]
+            }
+        },
+        "admob_app_id": "ca-app-pub-3137462128319942~6703857224"
+    }],
+    "configuration_version": "1"
 }

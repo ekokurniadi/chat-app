@@ -334,11 +334,11 @@ class _ProfileState extends State<Profile> {
                             controller: _nama,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Nama Lengkap",
+                              labelText: "Name",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Nama Lengkap",
+                              hintText: "Name",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -370,11 +370,11 @@ class _ProfileState extends State<Profile> {
                             controller: _alamat,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Alamat",
+                              labelText: "Address",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Alamat",
+                              hintText: "Address",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -407,11 +407,11 @@ class _ProfileState extends State<Profile> {
                             readOnly: true,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Level Pengguna",
+                              labelText: "Role",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Level Pengguna",
+                              hintText: "Role",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -444,11 +444,11 @@ class _ProfileState extends State<Profile> {
                             readOnly: true,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Nama Pengguna",
+                              labelText: "Username",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Nama Pengguna",
+                              hintText: "Username",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -570,7 +570,7 @@ class _ProfileState extends State<Profile> {
                             width: MediaQuery.of(context).size.width,
                             child: Center(
                               child: Text(
-                                "Simpan",
+                                "Submit",
                                 style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -585,13 +585,13 @@ class _ProfileState extends State<Profile> {
                       Container(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Postingan",
+                          "Post",
                           style: GoogleFonts.poppins(color: Colors.blueGrey),
                         ),
                       ),
                       album == null
                           ? Center(
-                              child: Text("Belum ada Postingan dari user ini"),
+                              child: Text("Nothing to show"),
                             )
                           : Container(
                               height: MediaQuery.of(context).size.height * 0.80,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:komun_apps/components/constanta.dart';
+// ignore: unused_import
 import 'package:komun_apps/pages/chat/chatdetail.dart';
 import 'package:komun_apps/pages/new_chat/chat_room.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';

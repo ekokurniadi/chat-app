@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:async';
+// ignore: unused_import
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:komun_apps/pages/chat/chat.dart';
+import 'package:komun_apps/pages/addMob.dart';
 import 'package:komun_apps/pages/chat/create_chat.dart';
 import 'package:komun_apps/pages/new_chat/chat_room.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -149,7 +150,6 @@ class _ListChatState extends State<ListChat> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _getMoreData(page, filter);
   }
@@ -158,7 +158,6 @@ class _ListChatState extends State<ListChat> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ChatRoom(id)));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +171,7 @@ class _ListChatState extends State<ListChat> {
           ),
           child: Column(
             children: [
+              AdMobPage(),
               Container(
                 margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
                 width: MediaQuery.of(context).size.width,
@@ -248,6 +248,7 @@ class _ListChatState extends State<ListChat> {
                           controller: _scrollController,
                           itemCount: dataUser.length,
                           itemBuilder: (BuildContext context, int index) {
+							  
                             return dataUser[index]["hapus_by_pengirim"] == users
                                 ? Container()
                                 : GestureDetector(
@@ -395,7 +396,6 @@ class _ListChatState extends State<ListChat> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              
                                                             ],
                                                           ),
                                                         ],

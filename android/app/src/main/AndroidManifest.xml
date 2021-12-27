@@ -31,6 +31,7 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
+			
               />
             <!-- Displays an Android View that continues showing the launch screen
                  Drawable until Flutter paints its first frame, then this splash
@@ -41,6 +42,7 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+			  
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -55,5 +57,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+		 <meta-data
+      			android:name="com.google.android.gms.ads.APPLICATION_ID"
+      			android:value="ca-app-pub-3137462128319942~6703857224"/>
     </application>
 </manifest>
