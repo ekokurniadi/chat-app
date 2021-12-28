@@ -28,6 +28,10 @@ class _ProfileState extends State<Profile> {
   TextEditingController _level = TextEditingController();
   TextEditingController _username = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _usia = TextEditingController();
+  TextEditingController _status = TextEditingController();
+  TextEditingController _agama = TextEditingController();
+  TextEditingController _jenisKelamin = TextEditingController();
   final Helper helper = new Helper();
   FirebaseMessaging fm = FirebaseMessaging();
 
@@ -108,6 +112,10 @@ class _ProfileState extends State<Profile> {
         _level.text = res['level'];
         _username.text = res['username'];
         _password.text = res['password'];
+        _usia.text = res['usia'];
+        _status.text = res['status_pernikahan'];
+        _agama.text = res['agama'];
+        _jenisKelamin.text = res['jenis_kelamin'];
         status = res['statususer'];
         if (res['statususer'] == "0") {
           terima = false;
@@ -159,6 +167,10 @@ class _ProfileState extends State<Profile> {
       "nama": _nama.text.toString(),
       "alamat": _alamat.text.toString(),
       "password": _password.text.toString(),
+	  "usia":_usia.text.toString(),
+	  "status_pernikahan":_status.text.toString(),
+	  "agama":_agama.text.toString(),
+	  "jenis_kelamin":_jenisKelamin.text.toString()
     });
     final res = jsonDecode(response.body);
     if (res["status"] == 200) {
@@ -375,6 +387,150 @@ class _ProfileState extends State<Profile> {
                                 color: Color(0xFF70747F),
                               ),
                               hintText: "Address",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _usia,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Age",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Age",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _jenisKelamin,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Gender",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Gender",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _status,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Status",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Status",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _agama,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Religion",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Religion",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komun_apps/components/uploadImageDemo.dart';
+import 'package:komun_apps/pages/home/home.dart';
 import '../../components/Helper.dart';
 import '../../components/config.dart';
 import '../../components/constanta.dart';
@@ -71,6 +72,50 @@ class _EditKomunitasState extends State<EditKomunitas> {
       helper.alertLog(res['message']);
     }
   }
+
+  deleteGroup()async{
+	  final response = await http.post(Config.BASE_URL + "delete_group",body:{
+		  "id":widget.id
+	  });
+	  final res = jsonDecode(response.body);
+	  if(res['status']==200){
+		  helper.alertLog("Successfully delete your Community");
+		   Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+	  }else{
+		  helper.alertLog("Failed delete your Community");
+		
+	  }
+  }
+
+  showAlertDialog(BuildContext context) {  // set up the buttons
+  Widget cancelButton = FlatButton(
+    child: Text("Cancel"),
+    onPressed:  () {
+		Navigator.pop(context);
+	},
+  );
+  Widget continueButton = FlatButton(
+    child: Text("Continue"),
+    onPressed:  () {
+		deleteGroup();
+	},
+  );  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Peringatan"),
+    content: Text("Would you like to continue delete your community ?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 
 
   @override
@@ -343,6 +388,22 @@ class _EditKomunitasState extends State<EditKomunitas> {
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
                         child: Text("Submit",
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white))),
+                  ),
+                ),
+				GestureDetector(
+                  onTap: () =>showAlertDialog(context),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 14),
+                    width: MediaQuery.of(context).size.width * 0.80,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text("Delete",
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white))),

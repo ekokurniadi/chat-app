@@ -151,7 +151,7 @@ class _ListChatState extends State<ListChat> {
   @override
   void dispose() {
     super.dispose();
-    _getMoreData(page, filter);
+    timer?.cancel();
   }
 
   void openChat(String id) {

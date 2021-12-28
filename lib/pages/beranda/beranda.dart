@@ -269,6 +269,7 @@ class _BerandaState extends State<Beranda> {
                         ),
                       )
                     : Container(
+						 padding: EdgeInsets.only(bottom:60),
                         height: MediaQuery.of(context).size.height * 0.80,
                         child: ListView.builder(
                           itemCount: dataBeranda.length,
@@ -301,10 +302,11 @@ class _BerandaState extends State<Beranda> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      child:
-                                          Image.asset("images/user-login.png"),
-                                    ),
+                                   Container(
+									   width: 50,
+									   height: 50,
+									   child: Image.network(Config.BASE_URL_IMAGE + "${dataBeranda[index]['cover']}",fit: BoxFit.cover,),
+								   ),
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -472,6 +474,7 @@ class _BerandaState extends State<Beranda> {
                         ),
                       )
                     : Container(
+						 padding: EdgeInsets.only(bottom:60),
                         height: MediaQuery.of(context).size.height * 0.80,
                         child: ListView.builder(
                           itemCount: dataBerandaFollow.length,
@@ -505,10 +508,11 @@ class _BerandaState extends State<Beranda> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      child:
-                                          Image.asset("images/user-login.png"),
-                                    ),
+                                    Container(
+									   width: 50,
+									   height: 50,
+									   child: Image.network(Config.BASE_URL_IMAGE + "${dataBerandaFollow[index]['cover']}",fit: BoxFit.cover,),
+								   ),
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,

@@ -47,6 +47,7 @@ dependencies:
   firebase_core: ^0.5.2+1
   flutter_native_admob: ^2.1.0+3
   advance_pdf_viewer: any
+  new_version: ^0.0.3
 
 
 dev_dependencies:

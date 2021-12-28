@@ -36,7 +36,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     final response = await http
         .post(Config.BASE_URL + "getById", body: {"id": widget.index});
     final res = jsonDecode(response.body);
-  
+
     if (res['status'] == 200) {
       setState(() {
         namaKomunitas = res['values']['nama_komunitas'];
@@ -58,7 +58,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
     final response = await http
         .post(Config.BASE_URL + "getAlbum", body: {"id": widget.index});
     Map<String, dynamic> res = jsonDecode(response.body);
-   
+
     setState(() {
       album = res['values'];
     });
@@ -91,14 +91,17 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                 Text(
                   'Photo',
                 ),
-                IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      delete(id, networkImage);
-                    })
+                Visibility(
+                  visible: admin == idUser ? true : false,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        delete(id, networkImage);
+                      }),
+                )
               ],
             ),
             content: Container(
@@ -222,8 +225,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                                     context,
                                     MaterialPageRoute(
                                         fullscreenDialog: true,
-                                        builder: (context) => User(
-                                            id: widget.index)),
+                                        builder: (context) =>
+                                            User(id: widget.index)),
                                   );
                                 },
                                 child: Container(
@@ -233,7 +236,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> {
                                   ),
                                   padding: EdgeInsets.all(5),
                                   child: Text("$pengikut Followers",
-                                      style: GoogleFonts.poppins(color:Colors.white)),
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white)),
                                 ),
                               ),
                               idUser == admin

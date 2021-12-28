@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
@@ -58,12 +59,22 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
+  Timer timer;
   @override
   void initState() {
     super.initState();
     getData();
     getMessage();
     prosesLoading = false;
+    timer = Timer.periodic(Duration(seconds: 2), (Timer timer) async {
+      await getMessage();
+    });
+  }
+
+  @override
+  void dispose() {
+	timer?.cancel();
+	super.dispose();
   }
 
   TextEditingController sendController = TextEditingController();
@@ -93,7 +104,8 @@ class _ChatRoomState extends State<ChatRoom> {
     }
   }
 
-  ScrollController _scrollController = new ScrollController(initialScrollOffset: 0);
+  ScrollController _scrollController =
+      new ScrollController(initialScrollOffset: 0);
   List<dynamic> dataList;
   getMessage() async {
     final request = await http
@@ -487,7 +499,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                   }
                                 }),
                           ),
-					AdMobPage(),
+                    AdMobPage(),
                     Container(
                       margin:
                           EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),

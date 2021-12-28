@@ -232,7 +232,9 @@ class _CreateChatState extends State<CreateChat> {
                                             CupertinoIcons.mail_solid,
                                             color: Colors.blueGrey,
                                           ),
-                                          onPressed: () {})
+                                          onPressed: () {
+											   createMessage(dataUser[index][1]);
+										  })
                                     ],
                                   ),
                                   onTap: () {

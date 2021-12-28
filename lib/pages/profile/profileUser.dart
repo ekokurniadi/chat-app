@@ -30,6 +30,10 @@ class _ProfileUserState extends State<ProfileUser> {
   TextEditingController _level = TextEditingController();
   TextEditingController _username = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _usia = TextEditingController();
+  TextEditingController _status = TextEditingController();
+  TextEditingController _agama = TextEditingController();
+  TextEditingController _jenisKelamin = TextEditingController();
   final Helper helper = new Helper();
   FirebaseMessaging fm = FirebaseMessaging();
 
@@ -75,9 +79,8 @@ class _ProfileUserState extends State<ProfileUser> {
     super.initState();
     loading = true;
     _getCurrentUser();
-	_getDetailAlbum();
+    _getDetailAlbum();
   }
-
 
   _getCurrentUser() async {
     final response = await http
@@ -93,7 +96,11 @@ class _ProfileUserState extends State<ProfileUser> {
         _level.text = res['level'];
         _username.text = res['username'];
         _password.text = res['password'];
+        _usia.text = res['usia'];
+        _status.text = res['status_pernikahan'];
+        _agama.text = res['agama'];
         status = res['statususer'];
+        _jenisKelamin.text = res['jenis_kelamin'];
         if (res['statususer'] == "0") {
           terima = false;
         } else {
@@ -152,8 +159,8 @@ class _ProfileUserState extends State<ProfileUser> {
 
   List<dynamic> album;
   _getDetailAlbum() async {
-    final response =
-        await http.post(Config.BASE_URL + "getAlbumUser", body: {"id": widget.id});
+    final response = await http
+        .post(Config.BASE_URL + "getAlbumUser", body: {"id": widget.id});
     Map<String, dynamic> res = jsonDecode(response.body);
     print(res);
     setState(() {
@@ -191,7 +198,7 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-		 appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
         title: Text(
@@ -272,11 +279,11 @@ class _ProfileUserState extends State<ProfileUser> {
                             controller: _nama,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Nama Lengkap",
+                              labelText: "Name",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Nama Lengkap",
+                              hintText: "Name",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -309,11 +316,11 @@ class _ProfileUserState extends State<ProfileUser> {
                             controller: _alamat,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Alamat",
+                              labelText: "Address",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Alamat",
+                              hintText: "Address",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -342,15 +349,122 @@ class _ProfileUserState extends State<ProfileUser> {
                         title: Container(
                           width: MediaQuery.of(context).size.width,
                           child: TextField(
-                            controller: _username,
-                            readOnly: true,
+                            controller: _usia,
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
-                              labelText: "Nama Pengguna",
+                              labelText: "Age",
                               labelStyle: TextStyle(
                                 color: Color(0xFF70747F),
                               ),
-                              hintText: "Nama Pengguna",
+                              hintText: "Age",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _jenisKelamin,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Gender",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Gender",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _status,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Status",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Status",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 0.0, bottom: 0.0, top: 0.0),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: Color(0xFFC9CFDF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: _agama,
+                            style: GoogleFonts.poppins(),
+                            decoration: InputDecoration(
+                              labelText: "Religion",
+                              labelStyle: TextStyle(
+                                color: Color(0xFF70747F),
+                              ),
+                              hintText: "Religion",
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   width: 2,
@@ -380,13 +494,13 @@ class _ProfileUserState extends State<ProfileUser> {
                       Container(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Postingan",
+                          "Post",
                           style: GoogleFonts.poppins(color: Colors.blueGrey),
                         ),
                       ),
                       album == null
                           ? Center(
-                              child: Text("Belum ada Postingan dari user ini"),
+                              child: Text("Nothing to show"),
                             )
                           : Container(
                               height: MediaQuery.of(context).size.height * 0.80,

@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 
-class AdMobInPage extends StatefulWidget {
+class AdMobInPageLogin extends StatefulWidget {
   @override
-  _AdMobInPageState createState() => _AdMobInPageState();
+  _AdMobInPageLoginState createState() => _AdMobInPageLoginState();
 }
 
-class _AdMobInPageState extends State<AdMobInPage> {
+class _AdMobInPageLoginState extends State<AdMobInPageLogin> {
   final _nativeAdController = NativeAdmobController();
   // ignore: unused_field
   double _height = 0;
@@ -52,7 +52,7 @@ class _AdMobInPageState extends State<AdMobInPage> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(8),
-        height: MediaQuery.of(context).size.height,
+        height: 330,
         color: Colors.transparent,
         child: NativeAdmob(
           adUnitID: NativeAd.testAdUnitId,

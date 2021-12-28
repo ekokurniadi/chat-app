@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import '../../components/config.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class CariBantuan extends StatefulWidget {
   @override
@@ -28,13 +29,62 @@ class _CariBantuanState extends State<CariBantuan> {
   String idPenerima = "";
   String idPesan = "";
   Timer timer;
+
+  FirebaseMessaging fm = FirebaseMessaging();
+  _CariBantuanState() {
+    fm.configure(
+      onLaunch: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+        }
+      },
+      onResume: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+          helper.alertLog(msg['notification']['body']);
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+        }
+      },
+      onMessage: (Map<String, dynamic> msg) async {
+        // print("ketika sedang berjalan");
+        // print(msg);
+        if (msg['data']['screen'] == 'list_trx' &&
+            msg['notification']['body'] != null) {
+          helper.alertLog(msg['notification']['body']);
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+        } else if (msg['data']['screen'] == 'list_notif') {
+          helper.alertLog(msg['notification']['body']);
+          _getMoreDataMembantu();
+          _getMoreDataBantuan();
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      _getMoreDataMembantu();
-      _getMoreDataBantuan();
-    });
+    _getMoreDataMembantu();
+    _getMoreDataBantuan();
   }
 
   List<dynamic> dataMembantu;
@@ -105,6 +155,23 @@ class _CariBantuanState extends State<CariBantuan> {
     }
   }
 
+  canceled(String id, String requested) async {
+    setState(() {
+      prosesLoading = true;
+    });
+    final response = await http.post(Config.BASE_URL + "cancel_help",
+        body: {"id": id, "requested": requested});
+    final res = jsonDecode(response.body);
+    print(res);
+    if (res['status'] == "200") {
+      setState(() {
+        prosesLoading = false;
+      });
+      _getMoreDataMembantu();
+      _getMoreDataBantuan();
+    }
+  }
+
   rejected(String id) async {
     setState(() {
       prosesLoading = true;
@@ -137,11 +204,10 @@ class _CariBantuanState extends State<CariBantuan> {
     final information = await Navigator.push(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => BuatBantuan()),
+          fullscreenDialog: false, builder: (context) => BuatBantuan()),
     );
     updateInformation(information);
   }
-
 
   @override
   void dispose() {
@@ -181,7 +247,7 @@ class _CariBantuanState extends State<CariBantuan> {
               ),
               preferredSize: Size.fromHeight(kToolbarHeight * 0))),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom:50.0),
+        padding: const EdgeInsets.only(bottom: 50.0),
         child: FloatingActionButton(
           onPressed: () {
             toHelp();
@@ -220,6 +286,7 @@ class _CariBantuanState extends State<CariBantuan> {
                           ),
                         )
                       : Container(
+                          padding: EdgeInsets.only(bottom: 50),
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
                               itemCount: dataMembantu.length,
@@ -381,6 +448,7 @@ class _CariBantuanState extends State<CariBantuan> {
                           ),
                         )
                       : Container(
+                          padding: EdgeInsets.only(bottom: 50),
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
                               itemCount: dataBantuan.length,
@@ -455,24 +523,28 @@ class _CariBantuanState extends State<CariBantuan> {
                                             ),
                                           ),
                                           Divider(),
-                                          Visibility(
-                                            visible: (dataBantuan[index]
-                                                            ['status'] ==
-                                                        "Rejected" ||
-                                                    dataBantuan[index]
-                                                            ['status'] ==
-                                                        "Accepted" ||
-                                                    dataBantuan[index]
-                                                            ['status'] ==
-                                                        "Canceled")
-                                                ? false
-                                                : true,
-                                            child: Container(
-                                              child: Row(
-                                                children: [
-                                                  GestureDetector(
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Visibility(
+                                                  visible: (dataBantuan[index]
+                                                                  ['status'] ==
+                                                              "Rejected" ||
+                                                          dataBantuan[index]
+                                                                  ['status'] ==
+                                                              "Accepted" ||
+                                                          dataBantuan[index]
+                                                                  ['status'] ==
+                                                              "Canceled")
+                                                      ? false
+                                                      : true,
+                                                  child: GestureDetector(
                                                     onTap: () {
-                                                      print("Batalkan");
+                                                      canceled(
+                                                          dataBantuan[index]
+                                                              ['id'],
+                                                          dataBantuan[index]
+                                                              ['requested']);
                                                     },
                                                     child: Container(
                                                       padding: EdgeInsets.only(
@@ -496,38 +568,38 @@ class _CariBantuanState extends State<CariBantuan> {
                                                       ),
                                                     ),
                                                   ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      createMessage(
-                                                          dataBantuan[index]
-                                                              ['recipient']);
-                                                    },
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 8),
-                                                      padding: EdgeInsets.only(
-                                                          top: 3,
-                                                          left: 8,
-                                                          bottom: 3,
-                                                          right: 8),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.green),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Chat",
-                                                          style: GoogleFonts
-                                                              .poppins(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400),
-                                                        ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    createMessage(
+                                                        dataBantuan[index]
+                                                            ['recipient']);
+                                                  },
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 8),
+                                                    padding: EdgeInsets.only(
+                                                        top: 3,
+                                                        left: 8,
+                                                        bottom: 3,
+                                                        right: 8),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.green),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Chat",
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ]),

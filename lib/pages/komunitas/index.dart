@@ -68,7 +68,7 @@ class _IndexState extends State<Index> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-         toCreate();
+          toCreate();
         },
         child: Icon(Icons.add),
       ),
@@ -186,7 +186,12 @@ class _IndexState extends State<Index> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                child: Image.asset("images/user-login.png"),
+                                radius: 0,
+                                backgroundImage: NetworkImage(
+                                  Config.BASE_URL_IMAGE +
+                                      "${dataBeranda[index]['cover']}",
+                                  scale: 10,
+                                ),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

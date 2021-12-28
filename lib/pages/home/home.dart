@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import 'package:komun_apps/pages/komunitas/index.dart';
 import 'package:komun_apps/pages/login.dart';
 import 'package:komun_apps/pages/new_chat/list_chat.dart';
 import 'package:komun_apps/pages/notif/notif.dart';
+// ignore: unused_import
 import 'package:komun_apps/pages/panduan/komun.dart';
 import 'package:komun_apps/pages/panduan/panduan_komun.dart';
 import 'package:komun_apps/pages/profile/profile.dart';
@@ -22,7 +24,8 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/Helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:http/http.dart' as http;
+import '../../components/config.dart';
 class Home extends StatefulWidget {
   // const Home({ Key? key }) : super(key: key);
 
@@ -105,11 +108,29 @@ class _HomeState extends State<Home> {
     super.initState();
     bottomNavBarIndex = 0;
     jumlahNotif = 0;
+    ntf = 0;
     pageController = PageController(initialPage: bottomNavBarIndex);
     prosesLogout = false;
+	getNotif();
     timer = Timer.periodic(Duration(seconds: 2), (Timer timer) async {
       await loca();
+	  await getNotif();
     });
+  }
+
+  List<dynamic> dataList;
+  Future<String> getNotif() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var idUser = pref.getString("idUser");
+    final response = await http.post(Config.BASE_URL + "getNotif",
+        body: {"id": idUser, "deleted": "0"});
+    Map<String, dynamic> map = jsonDecode(response.body);
+    setState(() {
+      dataList = map["values"];
+	  ntf = dataList == null ? 0 : dataList.length ;
+    });
+  
+    return "Success";
   }
 
   loca() {
@@ -169,8 +190,9 @@ class _HomeState extends State<Home> {
               ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    child: Image.asset("images/user-login.png"),
+                  Image.asset(
+                    "images/LOGO-NEW.png.png",
+                    width: 100,
                   ),
                   Container(
                     child: Text(
@@ -209,13 +231,13 @@ class _HomeState extends State<Home> {
                     MaterialPageRoute(builder: (context) => PanduanKomun()));
               },
             ),
-            ListTile(
-              title: Text("About Komun Apps"),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Komun()));
-              },
-            ),
+            // ListTile(
+            //   title: Text("About Komun Apps"),
+            //   onTap: () {
+            //     Navigator.push(
+            //         context, MaterialPageRoute(builder: (context) => Komun()));
+            //   },
+            // ),
           ],
         ),
       ),
@@ -253,7 +275,7 @@ class _HomeState extends State<Home> {
                         child: new Icon(Icons.brightness_1,
                             size: 12.0,
                             color: jumlahNotif != 0
-                                ? Colors.red
+                                ? Colors.transparent
                                 : Colors.transparent),
                       ),
                     )
@@ -286,7 +308,9 @@ class _HomeState extends State<Home> {
                       visible: ntf == 0 ? false : true,
                       child: new Icon(Icons.brightness_1,
                           size: 12.0,
-                          color: ntf != 0 ? Colors.red : Colors.transparent),
+                          color: ntf != 0
+                              ? Colors.red
+                              : Colors.transparent),
                     ),
                   )
                 ]),
